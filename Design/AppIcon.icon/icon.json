@@ -1,0 +1,22 @@
+{
+  "fill-specializations": [
+    {"value": {"solid": "srgb:0.94,0.95,0.97,1"}},
+    {"appearance": "dark", "value": {"solid": "srgb:0.15,0.16,0.19,1"}},
+    {"appearance": "tinted", "value": "automatic"}
+  ],
+  "groups": [
+    {
+      "layers": [
+        {
+          "image-name": "Mark.svg",
+          "name": "Head and control halo",
+          "glass": true
+        },
+        {"image-name": "Accent.svg", "name": "Amber accent", "glass": true}
+      ],
+      "shadow": {"kind": "neutral", "opacity": 0.25},
+      "translucency": {"enabled": true, "value": 0.15}
+    }
+  ],
+  "supported-platforms": {"squares": "shared"}
+}

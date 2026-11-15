@@ -1,0 +1,8 @@
+.build/
+.swiftpm/
+.DS_Store
+*.p12
+*.pfx
+*.key
+work/
+outputs/

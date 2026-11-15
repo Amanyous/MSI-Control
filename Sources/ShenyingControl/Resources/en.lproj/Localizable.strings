@@ -1,0 +1,735 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>about</key>
+	<string>About</string>
+	<key>about_msi_control_center</key>
+	<string>About MSI Control</string>
+	<key>ac_power</key>
+	<string>AC power</string>
+	<key>address</key>
+	<string>Address</string>
+	<key>adjust_charge_limit_percentage</key>
+	<string>Adjust charge limit percentage</string>
+	<key>advanced</key>
+	<string>Advanced</string>
+	<key>agentHint</key>
+	<string>The background agent keeps animated lighting running after the main window closes; sleep pauses it.</string>
+	<key>allZonesColor</key>
+	<string>All zones · color</string>
+	<key>animation_paused_keyboard_keeps_the_last_colors</key>
+	<string>Animation paused; keyboard keeps the last colors</string>
+	<key>animation_stopped_for_sleep_apply_again_after_waking</key>
+	<string>Animation stopped for sleep; apply again after waking</string>
+	<key>appAppearance</key>
+	<string>Appearance</string>
+	<key>appLanguage</key>
+	<string>App language</string>
+	<key>appearanceDark</key>
+	<string>Dark</string>
+	<key>appearanceLight</key>
+	<string>Light</string>
+	<key>appearanceSystem</key>
+	<string>System</string>
+	<key>applied_and_saved_to_keyboard_controller</key>
+	<string>applied and saved to keyboard controller</string>
+	<key>apply</key>
+	<string>Apply settings</string>
+	<key>applyChargeLimit</key>
+	<string>Apply charge limit</string>
+	<key>applyCurve</key>
+	<string>Apply curve</string>
+	<key>applyCurvePreview</key>
+	<string>Apply curve preview</string>
+	<key>applyHint</key>
+	<string>Changes take effect after Apply; editing pauses the current animation.</string>
+	<key>applyMode</key>
+	<string>Apply mode</string>
+	<key>applyToAllZones</key>
+	<string>Apply to all zones</string>
+	<key>apply_manual_mode_first</key>
+	<string>Apply Manual mode first</string>
+	<key>apply_settings</key>
+	<string>Apply Settings</string>
+	<key>approveLoginItem</key>
+	<string>Allow in System Settings…</string>
+	<key>architecture</key>
+	<string>Architecture</string>
+	<key>authorization_or_ec_write_failed</key>
+	<string>Authorization or EC write failed</string>
+	<key>automatic</key>
+	<string>Automatic</string>
+	<key>back</key>
+	<string>Back</string>
+	<key>back_up_and_install</key>
+	<string>Back Up and Install</string>
+	<key>background_agent</key>
+	<string>Background agent</string>
+	<key>balanced</key>
+	<string>Balanced</string>
+	<key>balancedSubtitle</key>
+	<string>Default profile</string>
+	<key>balanced_df544e46</key>
+	<string>Balanced</string>
+	<key>balanced_use</key>
+	<string>Balanced use</string>
+	<key>battery</key>
+	<string>Battery</string>
+	<key>batteryLimitHint</key>
+	<string>Lowering the limit does not discharge the battery. Set 100% when you need a full charge.</string>
+	<key>batteryTitle</key>
+	<string>Battery settings</string>
+	<key>battery_power</key>
+	<string>Battery power</string>
+	<key>battery_unavailable</key>
+	<string>Battery unavailable</string>
+	<key>blue</key>
+	<string>Blue</string>
+	<key>breathing</key>
+	<string>Breathing</string>
+	<key>brightness</key>
+	<string>Brightness</string>
+	<key>brightnessLabel</key>
+	<string>Color brightness</string>
+	<key>build</key>
+	<string>Build</string>
+	<key>bundled_ec_driver</key>
+	<string>Bundled EC driver</string>
+	<key>bundled_ec_write_helper_missing</key>
+	<string>Bundled EC write helper missing</string>
+	<key>bundled_ec_write_helper_missing_7e91d7bf</key>
+	<string>Bundled EC write helper missing</string>
+	<key>cancel</key>
+	<string>Cancel</string>
+	<key>cancelled</key>
+	<string>Cancelled.</string>
+	<key>cancelled_efi_unchanged</key>
+	<string>Cancelled; EFI unchanged.</string>
+	<key>cannot_create_hid_query</key>
+	<string>Cannot create HID query</string>
+	<key>cannot_identify_current_d4_fan_mode</key>
+	<string>Cannot identify current D4 fan mode</string>
+	<key>cannot_locate_ec_driver_service</key>
+	<string>Cannot locate EC driver service</string>
+	<key>changes_pending_apply_to_send_to_keyboard</key>
+	<string>Changes pending; apply to send to keyboard</string>
+	<key>charge_control_requires_msiecbridge_0_3_1</key>
+	<string>Charge control requires MSIECBridge 0.3.1</string>
+	<key>charge_control_supported_read_write_verification_available</key>
+	<string>Charge control supported; read/write verification available</string>
+	<key>charge_limit</key>
+	<string>Charge limit</string>
+	<key>charge_limit_out_of_range</key>
+	<string>Charge limit out of range</string>
+	<key>charge_limit_percentage</key>
+	<string>Charge limit percentage</string>
+	<key>charging</key>
+	<string>Charging</string>
+	<key>check_again</key>
+	<string>Check Again</string>
+	<key>check_ec_status_in_hardware_drivers_before_first_use_fan_control_and_c</key>
+	<string>Check EC status in Hardware Drivers before first use. Fan control and charge limits require a compatible driver; restart and boot through the configured OpenCore after setup. Automatic fan mode does not allow manual curve editing. Select zones and apply colors in Lighting. Diagnostic logs contain currently read status only, never administrator passwords.</string>
+	<key>choose</key>
+	<string>Choose</string>
+	<key>chooseAll</key>
+	<string>Select all</string>
+	<key>choose_an_rgb_color</key>
+	<string>Choose an RGB color</string>
+	<key>choose_opencore_config_plist_or_efi_folder</key>
+	<string>Choose OpenCore config.plist or EFI folder</string>
+	<key>color_cycle</key>
+	<string>Color cycle</string>
+	<key>color_picker_or_hex_rgb_channels_0_255</key>
+	<string>Color picker or HEX · RGB channels 0–255</string>
+	<key>color_wheel</key>
+	<string>Color wheel</string>
+	<key>colors_unchanged_no_resend_needed</key>
+	<string>Colors unchanged; no resend needed</string>
+	<key>configureDriver</key>
+	<string>Configure EC driver…</string>
+	<key>configure_msiecbridge_0_3_0_and_restart</key>
+	<string>Configure MSIECBridge 0.3.0 and restart</string>
+	<key>configure_msiecbridge_0_3_1_and_restart</key>
+	<string>Configure MSIECBridge 0.3.1 and restart</string>
+	<key>cooler_boost</key>
+	<string>Cooler boost</string>
+	<key>cooler_boost_readback_mismatch</key>
+	<string>Cooler boost readback mismatch</string>
+	<key>cooler_boost_requires_msiecbridge_0_3_0_configure_and_restart</key>
+	<string>Cooler boost requires MSIECBridge 0.3.0; configure and restart</string>
+	<key>cooler_boost_writes_not_supported_by_firmware</key>
+	<string>Cooler boost writes not supported by firmware</string>
+	<key>copied</key>
+	<string>Command copied</string>
+	<key>copySample</key>
+	<string>Copy sampling command</string>
+	<key>coresThreads</key>
+	<string>Cores / threads</string>
+	<key>cpuFanSpeed</key>
+	<string>CPU fan speed</string>
+	<key>cpuFrequency</key>
+	<string>CPU frequency</string>
+	<key>cpuPower</key>
+	<string>CPU power</string>
+	<key>cpuTemperature</key>
+	<string>CPU temperature</string>
+	<key>cpuUsage</key>
+	<string>CPU usage</string>
+	<key>critical</key>
+	<string>Critical</string>
+	<key>current_and_previous_colors_must_contain_24_zones_no_reports_sent</key>
+	<string>Current and previous colors must contain 24 zones; no reports sent</string>
+	<key>current_charge_limit</key>
+	<string>Current charge limit</string>
+	<key>current_ec_mode</key>
+	<string>Current EC mode</string>
+	<key>curvePreview</key>
+	<string>Curve preview</string>
+	<key>curve_and_advanced_mode_verified</key>
+	<string>curve and Advanced mode verified</string>
+	<key>curve_control_requires_msiecbridge_0_3_0_configure_and_restart</key>
+	<string>Curve control requires MSIECBridge 0.3.0; configure and restart</string>
+	<key>customChargeLimit</key>
+	<string>Custom</string>
+	<key>custom_color</key>
+	<string>Custom color</string>
+	<key>custom_fan_curves_not_supported_by_this_firmware</key>
+	<string>Custom fan curves not supported by this firmware</string>
+	<key>custom_limit</key>
+	<string>Custom limit</string>
+	<key>cyan</key>
+	<string>Cyan</string>
+	<key>d4_readback_verified</key>
+	<string>D4 readback verified</string>
+	<key>dashboard</key>
+	<string>Dashboard</string>
+	<key>dashboard_title</key>
+	<string>Dashboard</string>
+	<key>development_build_battery_and_fan_control</key>
+	<string>Development build · battery and fan control</string>
+	<key>deviceDiagnostics</key>
+	<string>Device and operation diagnostics</string>
+	<key>deviceStatus</key>
+	<string>Device status</string>
+	<key>device_found_no_matching_24_zone_lighting_interface</key>
+	<string>Device found; no matching 24-zone lighting interface</string>
+	<key>diagnostics_exported_interface_and_most_recent_send_result</key>
+	<string>Diagnostics exported (interface and most recent send result)</string>
+	<key>disabled</key>
+	<string>disabled</string>
+	<key>dragFanPoints</key>
+	<string>Drag sliders to adjust each temperature point</string>
+	<key>driverConfig</key>
+	<string>Driver configuration</string>
+	<key>driverConfigurationContext</key>
+	<string>After you select and confirm an OpenCore EFI, the app backs up its configuration and existing driver, installs the EC driver, and updates config.plist. Restart the computer and boot through that OpenCore. Ensure the EFI is writable and retain a working recovery boot option.</string>
+	<key>driver_loaded_property_read_failed</key>
+	<string>Driver loaded; property read failed</string>
+	<key>driver_not_loaded</key>
+	<string>Driver not loaded</string>
+	<key>driver_service_unavailable</key>
+	<string>Driver service unavailable</string>
+	<key>drivers</key>
+	<string>Hardware Drivers</string>
+	<key>ecDriver</key>
+	<string>EC driver</string>
+	<key>ecDriverFirmware</key>
+	<string>EC driver and firmware</string>
+	<key>ecIdentity</key>
+	<string>EC identity</string>
+	<key>ecRegisterAdvanced</key>
+	<string>EC registers (advanced)</string>
+	<key>ecSystemCapability</key>
+	<string>EC and system capabilities</string>
+	<key>ecWriteAvailability</key>
+	<string>EC writes are enabled when a compatible bridge is detected</string>
+	<key>ec_bridge_and_opencore_driver</key>
+	<string>EC bridge and OpenCore driver</string>
+	<key>ec_capabilities</key>
+	<string>EC capabilities</string>
+	<key>ec_configured_waiting_to_load</key>
+	<string>EC configured; waiting to load</string>
+	<key>ec_curve_or_mode_changed_read_again</key>
+	<string>EC curve or mode changed; read again</string>
+	<key>ec_curve_points_outside_verified_range_read_only</key>
+	<string>EC curve points outside verified range; read-only</string>
+	<key>ec_d2_d4_verified_manual_fan_curve_exited</key>
+	<string>EC D2/D4 verified; manual fan curve exited</string>
+	<key>ec_driver_configuration</key>
+	<string>EC driver configuration</string>
+	<key>ec_driver_not_loaded_configure_the_bundled_kext_in_driver_configuratio</key>
+	<string>EC driver not loaded. Configure the bundled Kext in Driver configuration and restart.</string>
+	<key>ec_driver_not_ready</key>
+	<string>EC driver not ready</string>
+	<key>ec_fan_mode</key>
+	<string>EC fan mode</string>
+	<key>ec_fan_mode_readback_does_not_match_the_request</key>
+	<string>EC fan mode readback does not match the request</string>
+	<key>ec_firmware_charging_control</key>
+	<string>EC firmware charging control</string>
+	<key>ec_helper_missing_use_the_complete_m_control_app</key>
+	<string>EC helper missing; use the complete MSI Control.app</string>
+	<key>ec_hexadecimal_address_00_to_ff</key>
+	<string>EC hexadecimal address, 00 to FF</string>
+	<key>ec_hexadecimal_byte_value</key>
+	<string>EC hexadecimal byte value</string>
+	<key>ec_identity</key>
+	<string>EC identity</string>
+	<key>ec_interface_not_connected</key>
+	<string>EC interface not connected</string>
+	<key>ec_kext_0_3_2_performs_no_writes_at_startup_battery_fan_and_performanc</key>
+	<string>EC Kext 0.3.2 performs no writes at startup. Battery, fan, and performance writes for 15P2EMS1.110 require an explicit action and administrator authorization.</string>
+	<key>ec_performance_mode_changed_or_driver_too_old_read_again</key>
+	<string>EC performance mode changed or driver too old; read again</string>
+	<key>ec_read_write_driver_loaded</key>
+	<string>EC read/write driver loaded</string>
+	<key>ec_readback_mismatch_charge_limit_not_confirmed</key>
+	<string>EC readback mismatch; charge limit not confirmed</string>
+	<key>ec_readback_verified</key>
+	<string>EC readback verified</string>
+	<key>ec_readback_verified_323174a7</key>
+	<string>EC readback verified</string>
+	<key>ec_value_is_not_a_single_byte</key>
+	<string>EC value is not a single byte</string>
+	<key>editZone</key>
+	<string>Edit zone %d</string>
+	<key>editingLightingZone</key>
+	<string>Edit zone %d</string>
+	<key>enabled</key>
+	<string>enabled</string>
+	<key>enter_a_hexadecimal_address_from_00_to_ff</key>
+	<string>Enter a hexadecimal address from 00 to FF</string>
+	<key>enter_a_six_digit_rgb_value_such_as_3366ff</key>
+	<string>Enter a six-digit RGB value, such as #3366FF</string>
+	<key>experimental_24_zone_protocol_matched_effect_not_confirmed</key>
+	<string>Experimental 24-zone protocol matched; effect not confirmed</string>
+	<key>export_diagnostic_log</key>
+	<string>Export Diagnostic Log…</string>
+	<key>export_diagnostics</key>
+	<string>Export diagnostics…</string>
+	<key>export_diagnostics_afe611c6</key>
+	<string>; export diagnostics</string>
+	<key>export_failed</key>
+	<string>Export failed</string>
+	<key>extreme</key>
+	<string>Extreme</string>
+	<key>extremeSubtitle</key>
+	<string>APEX / Surge enhanced performance</string>
+	<key>extreme_7484d410</key>
+	<string>Extreme</string>
+	<key>failed</key>
+	<string>failed</string>
+	<key>failed_to_open_lighting_interface</key>
+	<string>Failed to open lighting interface</string>
+	<key>fan</key>
+	<string>Fan control</string>
+	<key>fanCurve</key>
+	<string>Dual fan curves</string>
+	<key>fanModeHint</key>
+	<string>Automatic mode locks editing; apply Manual to edit curves. Writing requires administrator authorization.</string>
+	<key>fanNodes</key>
+	<string>Fan points</string>
+	<key>fanPreviewOnly</key>
+	<string>Custom PWM writing is not verified for this EC; the curve is preview only</string>
+	<key>fan_1</key>
+	<string>CPU Fan</string>
+	<key>fan_2</key>
+	<string>GPU Fan</string>
+	<key>fan_3e41bc3f</key>
+	<string>Fan</string>
+	<key>fan_control_and_charge_limits_require_a_compatible_ec_driver_check_har</key>
+	<string>Fan control and charge limits require a compatible EC driver. Check Hardware Drivers. Configuration requires your confirmation; nothing is installed automatically.</string>
+	<key>fan_control_and_charge_limits_require_a_compatible_ec_driver_not_loade</key>
+	<string>Fan control and charge limits require a compatible EC driver. Not loaded does not mean not installed. Check Hardware Drivers first.</string>
+	<key>fan_curve_automatic_hint</key>
+	<string>Fan curves cannot be adjusted in automatic mode.</string>
+	<key>fan_mode_readback_mismatch</key>
+	<string>Fan mode readback mismatch</string>
+	<key>fan_mode_writes_not_supported_by_firmware_or_driver</key>
+	<string>Fan mode writes not supported by firmware or driver</string>
+	<key>fasterShorter</key>
+	<string>Shorter is faster</string>
+	<key>feature_report_2_is_not_the_known_64_byte_format_sending_disabled</key>
+	<string>Feature Report 2 is not the known 64-byte format; sending disabled</string>
+	<key>find_ec_driver</key>
+	<string>Find EC driver</string>
+	<key>forward</key>
+	<string>Forward</string>
+	<key>frequencyOnDemand</key>
+	<string>Authorization is requested at startup for a 1-second average sample. Timestamped results remain available; resample manually to update.</string>
+	<key>frequencySampling</key>
+	<string>Sampling…</string>
+	<key>full_charge</key>
+	<string>Full charge</string>
+	<key>generalSettings</key>
+	<string>General</string>
+	<key>globalLightingSettings</key>
+	<string>Global settings</string>
+	<key>green</key>
+	<string>Green</string>
+	<key>hardware_id_not_supported</key>
+	<string>Hardware ID not supported</string>
+	<key>hid_enumeration_failed</key>
+	<string>HID enumeration failed</string>
+	<key>highPerformance</key>
+	<string>Performance</string>
+	<key>hot</key>
+	<string>Hot</string>
+	<key>incompatible_ec_driver_api_configure_the_bundled_driver_and_restart</key>
+	<string>Incompatible EC driver API. Configure the bundled driver and restart.</string>
+	<key>interface_does_not_match_the_protocol_no_reports_sent</key>
+	<string>Interface does not match the protocol; no reports sent</string>
+	<key>interface_read_failed</key>
+	<string>Interface read failed</string>
+	<key>invalid_charge_limit_or_expected_ec_value</key>
+	<string>Invalid charge limit or expected EC value</string>
+	<key>invalid_charge_write_receipt_read_again</key>
+	<string>Invalid charge write receipt; read again</string>
+	<key>invalid_curve_parameters</key>
+	<string>Invalid curve parameters</string>
+	<key>invalid_curve_points</key>
+	<string>Invalid curve points</string>
+	<key>invalid_ec_firmware_identity_read_only</key>
+	<string>Invalid EC firmware identity; read-only</string>
+	<key>invalid_fan_mode_receipt_read_again</key>
+	<string>Invalid fan mode receipt; read again</string>
+	<key>invalid_lighting_settings_no_reports_sent</key>
+	<string>Invalid lighting settings; no reports sent</string>
+	<key>invalid_performance_receipt</key>
+	<string>Invalid performance receipt</string>
+	<key>language</key>
+	<string>Language</string>
+	<key>language_chinese</key>
+	<string>简体中文</string>
+	<key>language_system</key>
+	<string>System</string>
+	<key>lastApplied</key>
+	<string>Last applied: %@</string>
+	<key>launchAtLogin</key>
+	<string>Launch at login</string>
+	<key>lighting</key>
+	<string>Lighting</string>
+	<key>lightingColor</key>
+	<string>Color</string>
+	<key>lightingSubtitle</key>
+	<string>24-zone colors · saved locally and sent when applied</string>
+	<key>lightingTitle</key>
+	<string>Keyboard lighting</string>
+	<key>lightingZone</key>
+	<string>Zone %d</string>
+	<key>lighting_device_changed_refresh_and_retry_no_reports_sent</key>
+	<string>Lighting device changed; refresh and retry. No reports sent</string>
+	<key>lighting_disabled_and_saved_to_keyboard_controller</key>
+	<string>Lighting disabled and saved to keyboard controller</string>
+	<key>loads_firmware_saved_lighting_not_necessarily_the_previous_temporary_s</key>
+	<string>Loads firmware-saved lighting, not necessarily the previous temporary state.</string>
+	<key>logicalZoneHint</key>
+	<string>Logical zones 1–24; order does not represent physical key positions.</string>
+	<key>m_control_crosshair_16_hx_d14vfkg</key>
+	<string>MSI Control · Crosshair 16 HX D14VFKG</string>
+	<key>manual</key>
+	<string>Manual</string>
+	<key>manual_configuration</key>
+	<string>Manual configuration</string>
+	<key>may_be_partially_applied_read_again</key>
+	<string>may be partially applied; read again</string>
+	<key>mode</key>
+	<string>Mode</string>
+	<key>modify_opencore_efi</key>
+	<string>Modify OpenCore EFI</string>
+	<key>msi_control_center_help</key>
+	<string>MSI Control Help</string>
+	<key>multiple_ec_bridge_services_no_reads_or_writes_performed</key>
+	<string>Multiple EC bridge services; no reads or writes performed</string>
+	<key>multiple_interfaces_matched_export_diagnostics_to_identify_the_target</key>
+	<string>Multiple interfaces matched; export diagnostics to identify the target</string>
+	<key>no_ec_access_at_startup</key>
+	<string>No EC access at startup</string>
+	<key>no_limit_reported_by_firmware</key>
+	<string>No limit reported by firmware</string>
+	<key>no_msi_steelseries_hid_interface_found</key>
+	<string>No MSI / SteelSeries HID interface found</string>
+	<key>normal</key>
+	<string>Normal</string>
+	<key>notApplied</key>
+	<string>Settings not applied</string>
+	<key>not_applying_an_unrecognized_mode</key>
+	<string>; not applying an unrecognized mode</string>
+	<key>not_charging</key>
+	<string>Not charging</string>
+	<key>not_confirmed</key>
+	<string>Not confirmed</string>
+	<key>not_now</key>
+	<string>Not Now</string>
+	<key>not_read</key>
+	<string>Not read</string>
+	<key>off</key>
+	<string>Off</string>
+	<key>off_5d0ae622</key>
+	<string>Off</string>
+	<key>ok</key>
+	<string>OK</string>
+	<key>on</key>
+	<string>On</string>
+	<key>on_demand_reads_fan_battery_settings</key>
+	<string>On-demand reads · fan/battery settings</string>
+	<key>one_experimental_lighting_interface_matched</key>
+	<string>One experimental lighting interface matched</string>
+	<key>only_automatic_and_manual_are_supported</key>
+	<string>Only Automatic and Manual are supported</string>
+	<key>only_charge_register_d7_is_supported_use_8a_e4_10_100</key>
+	<string>Only charge register D7 is supported; use 8A–E4 (10–100%).</string>
+	<key>openCoreDetected</key>
+	<string>Detected</string>
+	<key>openCoreUnverified</key>
+	<string>Not verified</string>
+	<key>openCoreVersionUnavailable</key>
+	<string>Version information not detected</string>
+	<key>openPageScan</key>
+	<string>The target interface is scanned when this page opens</string>
+	<key>open_ec_driver</key>
+	<string>Open EC driver</string>
+	<key>open_hardware_drivers</key>
+	<string>Open Hardware Drivers</string>
+	<key>opencore_configuration</key>
+	<string>OpenCore configuration</string>
+	<key>optionalZones</key>
+	<string>Per-zone colors (optional)</string>
+	<key>orange</key>
+	<string>Orange</string>
+	<key>passive_diagnostic_driver_loaded</key>
+	<string>Passive diagnostic driver loaded</string>
+	<key>pause</key>
+	<string>Pause animation</string>
+	<key>performance</key>
+	<string>Performance mode</string>
+	<key>performanceFanControl</key>
+	<string>Performance and fan control</string>
+	<key>performanceQuick</key>
+	<string>Quickly switch power and fan behavior</string>
+	<key>performanceSubtitle</key>
+	<string>High-performance profile</string>
+	<key>performance_4fbe6bf6</key>
+	<string>Performance</string>
+	<key>performance_mode</key>
+	<string>Performance mode</string>
+	<key>performance_reads_not_supported_by_this_firmware</key>
+	<string>Performance reads not supported by this firmware</string>
+	<key>performance_switching_requires_msiecbridge_0_3_2_and_supported_firmwar</key>
+	<string>Performance switching requires MSIECBridge 0.3.2 and supported firmware</string>
+	<key>performance_write_failed</key>
+	<string>Performance write failed</string>
+	<key>period</key>
+	<string>Period</string>
+	<key>plugged_in</key>
+	<string>Plugged in</string>
+	<key>power</key>
+	<string>Power</string>
+	<key>powerInformation</key>
+	<string>macOS power information</string>
+	<key>purple</key>
+	<string>Purple</string>
+	<key>quiet</key>
+	<string>Quiet</string>
+	<key>quietSubtitle</key>
+	<string>Low-noise profile</string>
+	<key>quiet_04403982</key>
+	<string>Quiet</string>
+	<key>rainbow</key>
+	<string>Rainbow</string>
+	<key>readByte</key>
+	<string>Read byte</string>
+	<key>readEC</key>
+	<string>Read EC</string>
+	<key>read_ec</key>
+	<string>Read EC</string>
+	<key>read_ec_again_before_continuing</key>
+	<string>; read EC again before continuing</string>
+	<key>read_ec_firmware_identity</key>
+	<string>Read EC firmware identity</string>
+	<key>read_the_ec_curve_first</key>
+	<string>Read the EC curve first</string>
+	<key>readback_matches</key>
+	<string>Readback matches</string>
+	<key>readback_mismatch</key>
+	<string>Readback mismatch</string>
+	<key>reading</key>
+	<string>Reading</string>
+	<key>reading_d4_and_verifying_fan_mode</key>
+	<string>Reading D4 and verifying fan mode…</string>
+	<key>reading_ec_fan_state</key>
+	<string>Reading EC fan state…</string>
+	<key>reading_ec_firmware_and_charge_settings</key>
+	<string>Reading EC firmware and charge settings…</string>
+	<key>reading_ec_performance_mode</key>
+	<string>Reading EC performance mode…</string>
+	<key>reading_firmware_and_charge_limit</key>
+	<string>Reading firmware and charge limit</string>
+	<key>reading_lighting_interface</key>
+	<string>Reading lighting interface…</string>
+	<key>ready</key>
+	<string>Ready</string>
+	<key>red</key>
+	<string>Red</string>
+	<key>refresh</key>
+	<string>Refresh</string>
+	<key>refreshDriverStatus</key>
+	<string>Refresh driver status</string>
+	<key>refreshInterface</key>
+	<string>Refresh interface</string>
+	<key>refresh_data</key>
+	<string>Refresh Data</string>
+	<key>refresh_the_lighting_interface_on_the_target_msi</key>
+	<string>Refresh the lighting interface on the target MSI</string>
+	<key>registerHint</key>
+	<string>Read one byte at 00–FF. Writes currently target charge register D7; the value is the limit percentage plus 0x80, so 80% is D0.</string>
+	<key>reports</key>
+	<string>reports</string>
+	<key>reports_sent_check_the_keyboard_to_confirm</key>
+	<string>reports sent; check the keyboard to confirm</string>
+	<key>restart_and_boot_through_the_configured_opencore_then_check_again</key>
+	<string>Restart and boot through the configured OpenCore, then check again.</string>
+	<key>ripple</key>
+	<string>Ripple</string>
+	<key>running_background_playback</key>
+	<string>running · background playback</string>
+	<key>sampleEverySecond</key>
+	<string>CPU usage %d%% · sampled every second</string>
+	<key>sampleFrequency</key>
+	<string>Sample CPU frequency…</string>
+	<key>savedLighting</key>
+	<string>Load saved keyboard lighting</string>
+	<key>sceneMode</key>
+	<string>Scenario mode</string>
+	<key>seconds</key>
+	<string>%.1f s</string>
+	<key>select_configuration_back_up_and_configure_ec_kext_0_3_2</key>
+	<string>Select configuration, back up, and configure EC Kext 0.3.2</string>
+	<key>select_efi_oc_config_plist_an_efi_volume_or_an_efi_oc_folder_mount_efi</key>
+	<string>Select EFI/OC/config.plist, an EFI volume, or an EFI/OC folder. Mount EFI first if needed.</string>
+	<key>send_failed</key>
+	<string>Send failed</string>
+	<key>sending_lighting_settings</key>
+	<string>Sending lighting settings…</string>
+	<key>sensorFan2Speed</key>
+	<string>GPU Fan</string>
+	<key>sensorFanSpeed</key>
+	<string>CPU Fan</string>
+	<key>sensorMissing</key>
+	<string>Sensor unavailable</string>
+	<key>sensorMissingHint</key>
+	<string>Hover for details</string>
+	<key>sensorReadOnly</key>
+	<string>Read-only sensor samples every second; hover over missing readings for details.</string>
+	<key>sent</key>
+	<string>; sent</string>
+	<key>settings</key>
+	<string>Settings</string>
+	<key>settings_da9fc8ba</key>
+	<string>Settings…</string>
+	<key>silent</key>
+	<string>Silent</string>
+	<key>six_digit_rgb_hexadecimal_color</key>
+	<string>Six-digit RGB hexadecimal color</string>
+	<key>solid</key>
+	<string>Solid</string>
+	<key>solid_ff922e02</key>
+	<string>Solid</string>
+	<key>source</key>
+	<string>Source</string>
+	<key>startupSettings</key>
+	<string>Startup</string>
+	<key>strongCooling</key>
+	<string>Cooler boost</string>
+	<key>switch_performance_mode</key>
+	<string>Switch performance mode</string>
+	<key>switching_ec_performance_mode</key>
+	<string>Switching EC performance mode…</string>
+	<key>system</key>
+	<string>System</string>
+	<key>systemMonitor</key>
+	<string>System monitor</string>
+	<key>temperature_fan_control_percentage</key>
+	<string>Temperature / fan control percentage</string>
+	<key>thermalState</key>
+	<string>Thermal state</string>
+	<key>turnOff</key>
+	<string>Turn off</string>
+	<key>turnOn</key>
+	<string>Turn on</string>
+	<key>unable_to_export_diagnostic_log</key>
+	<string>Unable to Export Diagnostic Log</string>
+	<key>unexpected_charge_register_writes_disabled</key>
+	<string>Unexpected charge register; writes disabled</string>
+	<key>unknown</key>
+	<string>Unknown</string>
+	<key>unknown_mode</key>
+	<string>Unknown mode</string>
+	<key>unknown_performance_mode</key>
+	<string>Unknown performance mode</string>
+	<key>unrecognized</key>
+	<string>Unrecognized</string>
+	<key>unsupported_firmware_ec_remains_read_only</key>
+	<string>Unsupported firmware; EC remains read-only</string>
+	<key>updatedAt</key>
+	<string>Updated %@</string>
+	<key>value</key>
+	<string>Value</string>
+	<key>version</key>
+	<string>Version</string>
+	<key>waiting_for_administrator_authorization_writes_will_be_verified</key>
+	<string>Waiting for administrator authorization; writes will be verified…</string>
+	<key>waiting_for_ec_driver</key>
+	<string>Waiting for EC driver</string>
+	<key>warm</key>
+	<string>Warm</string>
+	<key>wave</key>
+	<string>Wave</string>
+	<key>white</key>
+	<string>White</string>
+	<key>writeVerify</key>
+	<string>Write and verify</string>
+	<key>write_and_verify_charge_limit</key>
+	<string>Write and verify charge limit</string>
+	<key>write_and_verify_cooler_boost</key>
+	<string>Write and verify cooler boost</string>
+	<key>write_and_verify_fan_mode</key>
+	<string>Write and verify fan mode</string>
+	<key>write_fan_curve</key>
+	<string>Write fan curve</string>
+	<key>write_receipt_does_not_match_read_again_to_verify</key>
+	<string>Write receipt does not match; read again to verify</string>
+	<key>writing</key>
+	<string>Writing</string>
+	<key>yellow</key>
+	<string>Yellow</string>
+	<key>zoneColor</key>
+	<string>Zone %d · color</string>
+	<key>zoneRGB</key>
+	<string>24-zone RGB</string>
+	<key>充电状态</key>
+	<string>Charging status</string>
+    <key>shortcutPermissions</key><string>Keyboard Shortcut Permissions</string>
+    <key>inputMonitoring</key><string>Input Monitoring</string>
+    <key>bluetoothPermission</key><string>Bluetooth</string>
+    <key>permissionAllowed</key><string>Allowed</string>
+    <key>permissionRequired</key><string>Permission required</string>
+    <key>enableInputMonitoring</key><string>Enable Input Monitoring</string>
+    <key>enableBluetoothPermission</key><string>Allow Bluetooth Access</string>
+    <key>shortcutPermissionContext</key><string>Allow MSI Control in System Settings → Privacy &amp; Security → Input Monitoring. Fn+F5 toggles the digital microphone; Fn+F6 toggles Bluetooth. Shortcuts remain active while MSI Control is running. A restart of the app may be required after granting access.</string>
+    <key>standaloneHotkeysRunning</key><string>MSI Hotkeys is running and currently handles these shortcuts. Quit it to use MSI Control instead.</string>
+    <key>dragAppForInputMonitoring</key><string>Drag this icon into the Input Monitoring list, then turn on MSI Control.</string>
+    <key>dragAppForBluetooth</key><string>Drag this icon into the Bluetooth list, then turn on MSI Control.</string>
+    <key>osdSetting</key><string>Show keyboard status OSD</string>
+    <key>osdCaps</key><string>Caps Lock</string>
+    <key>osdSpeaker</key><string>Speaker mute</string>
+    <key>osdMicrophone</key><string>Microphone mute</string>
+    <key>osdBluetooth</key><string>Bluetooth</string>
+    <key>osdKeyboardBrightness</key><string>Keyboard brightness</string>
+    <key>osdFnLock</key><string>Fn Lock</string>
+    <key>osdUnconfirmed</key><string>State not confirmed</string>
+    <key>osdOn</key><string>On</string>
+    <key>osdOff</key><string>Off</string>
+</dict>
+</plist>

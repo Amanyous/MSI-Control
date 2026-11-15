@@ -1,0 +1,735 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>about</key>
+	<string>关于</string>
+	<key>about_msi_control_center</key>
+	<string>关于 MSI Control</string>
+	<key>ac_power</key>
+	<string>已接电源</string>
+	<key>address</key>
+	<string>地址</string>
+	<key>adjust_charge_limit_percentage</key>
+	<string>调整充电上限百分比</string>
+	<key>advanced</key>
+	<string>高级</string>
+	<key>agentHint</key>
+	<string>动态灯效由后台代理持续播放；主界面关闭后仍会运行，系统睡眠时暂停。</string>
+	<key>allZonesColor</key>
+	<string>全部区域 · 颜色</string>
+	<key>animation_paused_keyboard_keeps_the_last_colors</key>
+	<string>动画已暂停，键盘保留最后发送的颜色</string>
+	<key>animation_stopped_for_sleep_apply_again_after_waking</key>
+	<string>系统进入睡眠，动画已停止；唤醒后可重新应用</string>
+	<key>appAppearance</key>
+	<string>外观</string>
+	<key>appLanguage</key>
+	<string>App 语言</string>
+	<key>appearanceDark</key>
+	<string>深色</string>
+	<key>appearanceLight</key>
+	<string>浅色</string>
+	<key>appearanceSystem</key>
+	<string>跟随系统</string>
+	<key>applied_and_saved_to_keyboard_controller</key>
+	<string>已应用并保存到键盘控制器</string>
+	<key>apply</key>
+	<string>应用设置</string>
+	<key>applyChargeLimit</key>
+	<string>应用充电上限</string>
+	<key>applyCurve</key>
+	<string>应用曲线</string>
+	<key>applyCurvePreview</key>
+	<string>应用曲线预览</string>
+	<key>applyHint</key>
+	<string>点击应用后生效；修改参数会暂停当前动画。</string>
+	<key>applyMode</key>
+	<string>应用模式</string>
+	<key>applyToAllZones</key>
+	<string>应用至全部</string>
+	<key>apply_manual_mode_first</key>
+	<string>请先应用手动模式</string>
+	<key>apply_settings</key>
+	<string>应用设置</string>
+	<key>approveLoginItem</key>
+	<string>在系统设置中允许登录启动…</string>
+	<key>architecture</key>
+	<string>架构</string>
+	<key>authorization_or_ec_write_failed</key>
+	<string>管理员授权或 EC 写入失败</string>
+	<key>automatic</key>
+	<string>自动</string>
+	<key>back</key>
+	<string>后退</string>
+	<key>back_up_and_install</key>
+	<string>备份并安装</string>
+	<key>background_agent</key>
+	<string>后台代理</string>
+	<key>balanced</key>
+	<string>平衡</string>
+	<key>balancedSubtitle</key>
+	<string>默认配置</string>
+	<key>balanced_df544e46</key>
+	<string>平衡</string>
+	<key>balanced_use</key>
+	<string>均衡使用</string>
+	<key>battery</key>
+	<string>电池设置</string>
+	<key>batteryLimitHint</key>
+	<string>降低上限不会主动放电。需要充满时设为 100%。</string>
+	<key>batteryTitle</key>
+	<string>电池设置</string>
+	<key>battery_power</key>
+	<string>电池供电</string>
+	<key>battery_unavailable</key>
+	<string>未读取到电池</string>
+	<key>blue</key>
+	<string>蓝</string>
+	<key>breathing</key>
+	<string>呼吸</string>
+	<key>brightness</key>
+	<string>亮度</string>
+	<key>brightnessLabel</key>
+	<string>颜色亮度</string>
+	<key>build</key>
+	<string>构建</string>
+	<key>bundled_ec_driver</key>
+	<string>内置 EC 驱动</string>
+	<key>bundled_ec_write_helper_missing</key>
+	<string>应用内缺少 EC 写入助手</string>
+	<key>bundled_ec_write_helper_missing_7e91d7bf</key>
+	<string>应用缺少 EC 写入助手</string>
+	<key>cancel</key>
+	<string>取消</string>
+	<key>cancelled</key>
+	<string>已取消。</string>
+	<key>cancelled_efi_unchanged</key>
+	<string>已取消，EFI 未修改。</string>
+	<key>cannot_create_hid_query</key>
+	<string>无法创建 HID 查询</string>
+	<key>cannot_identify_current_d4_fan_mode</key>
+	<string>当前 D4 风扇模式无法确认</string>
+	<key>cannot_locate_ec_driver_service</key>
+	<string>无法查找 EC 驱动服务</string>
+	<key>changes_pending_apply_to_send_to_keyboard</key>
+	<string>参数已修改，点击应用后发送到键盘</string>
+	<key>charge_control_requires_msiecbridge_0_3_1</key>
+	<string>本机充电控制需要 MSIECBridge 0.3.1</string>
+	<key>charge_control_supported_read_write_verification_available</key>
+	<string>已匹配充电控制，可读写并校验</string>
+	<key>charge_limit</key>
+	<string>充电上限</string>
+	<key>charge_limit_out_of_range</key>
+	<string>充电上限超出范围</string>
+	<key>charge_limit_percentage</key>
+	<string>充电上限百分比</string>
+	<key>charging</key>
+	<string>正在充电</string>
+	<key>check_again</key>
+	<string>重新检测</string>
+	<key>check_ec_status_in_hardware_drivers_before_first_use_fan_control_and_c</key>
+	<string>首次使用请在“硬件驱动”检查 EC 状态。风扇控制和充电上限需要兼容驱动；配置后请重启并从对应 OpenCore 启动。自动风扇模式不能手动调整曲线。灯光页面可选择区域并应用颜色。诊断日志仅包含当前已读取的状态，不包含管理员密码。</string>
+	<key>choose</key>
+	<string>选择此项</string>
+	<key>chooseAll</key>
+	<string>选择全部</string>
+	<key>choose_an_rgb_color</key>
+	<string>打开取色器选择任意 RGB 颜色</string>
+	<key>choose_opencore_config_plist_or_efi_folder</key>
+	<string>选择 OpenCore config.plist 或 EFI 文件夹</string>
+	<key>color_cycle</key>
+	<string>色彩循环</string>
+	<key>color_picker_or_hex_rgb_channels_0_255</key>
+	<string>可用取色器或输入 HEX · RGB 每通道 0–255</string>
+	<key>color_wheel</key>
+	<string>色轮</string>
+	<key>colors_unchanged_no_resend_needed</key>
+	<string>颜色没有变化，无需重复发送</string>
+	<key>configureDriver</key>
+	<string>配置 EC 驱动…</string>
+	<key>configure_msiecbridge_0_3_0_and_restart</key>
+	<string>请先配置 MSIECBridge 0.3.0 并重启</string>
+	<key>configure_msiecbridge_0_3_1_and_restart</key>
+	<string>需配置 MSIECBridge 0.3.1 并重启</string>
+	<key>cooler_boost</key>
+	<string>强冷</string>
+	<key>cooler_boost_readback_mismatch</key>
+	<string>强冷读回不匹配</string>
+	<key>cooler_boost_requires_msiecbridge_0_3_0_configure_and_restart</key>
+	<string>强冷需要 MSIECBridge 0.3.0，配置驱动并重启后再试</string>
+	<key>cooler_boost_writes_not_supported_by_firmware</key>
+	<string>当前固件不支持强冷写入</string>
+	<key>copied</key>
+	<string>命令已复制</string>
+	<key>copySample</key>
+	<string>复制采样命令</string>
+	<key>coresThreads</key>
+	<string>核心 / 线程</string>
+	<key>cpuFanSpeed</key>
+	<string>CPU 风扇转速</string>
+	<key>cpuFrequency</key>
+	<string>CPU 频率</string>
+	<key>cpuPower</key>
+	<string>CPU 功耗</string>
+	<key>cpuTemperature</key>
+	<string>CPU 温度</string>
+	<key>cpuUsage</key>
+	<string>CPU 使用率</string>
+	<key>critical</key>
+	<string>严重</string>
+	<key>current_and_previous_colors_must_contain_24_zones_no_reports_sent</key>
+	<string>区域颜色与前帧颜色数量必须为 24，未发送任何报文</string>
+	<key>current_charge_limit</key>
+	<string>当前读回上限</string>
+	<key>current_ec_mode</key>
+	<string>EC 当前档位</string>
+	<key>curvePreview</key>
+	<string>曲线预览</string>
+	<key>curve_and_advanced_mode_verified</key>
+	<string>曲线及高级模式读回通过</string>
+	<key>curve_control_requires_msiecbridge_0_3_0_configure_and_restart</key>
+	<string>曲线控制需要 MSIECBridge 0.3.0，配置驱动并重启后再试</string>
+	<key>customChargeLimit</key>
+	<string>自定义</string>
+	<key>custom_color</key>
+	<string>自定义颜色</string>
+	<key>custom_fan_curves_not_supported_by_this_firmware</key>
+	<string>当前固件不支持自定义风扇曲线</string>
+	<key>custom_limit</key>
+	<string>自定义上限</string>
+	<key>cyan</key>
+	<string>青</string>
+	<key>d4_readback_verified</key>
+	<string>D4 读回校验通过</string>
+	<key>dashboard</key>
+	<string>仪表盘</string>
+	<key>dashboard_title</key>
+	<string>仪表盘</string>
+	<key>development_build_battery_and_fan_control</key>
+	<string>开发版 · 电池与风扇控制</string>
+	<key>deviceDiagnostics</key>
+	<string>设备与操作诊断</string>
+	<key>deviceStatus</key>
+	<string>设备状态</string>
+	<key>device_found_no_matching_24_zone_lighting_interface</key>
+	<string>发现设备，但没有匹配的 24 区灯控接口</string>
+	<key>diagnostics_exported_interface_and_most_recent_send_result</key>
+	<string>诊断已导出（最近一次发送时的接口和结果）</string>
+	<key>disabled</key>
+	<string>已关闭</string>
+	<key>dragFanPoints</key>
+	<string>拖动滑块调整每个温度点</string>
+	<key>driverConfig</key>
+	<string>驱动配置</string>
+	<key>driverConfigurationContext</key>
+	<string>选择 OpenCore EFI 并确认后，将备份配置和现有驱动，安装 EC 驱动并更新 config.plist。完成后需重启电脑并从该 OpenCore 启动；请确保 EFI 可写并保留可用的恢复启动项。</string>
+	<key>driver_loaded_property_read_failed</key>
+	<string>驱动已加载，属性读取失败</string>
+	<key>driver_not_loaded</key>
+	<string>驱动未加载</string>
+	<key>driver_service_unavailable</key>
+	<string>驱动服务不可用</string>
+	<key>drivers</key>
+	<string>硬件驱动</string>
+	<key>ecDriver</key>
+	<string>EC 驱动</string>
+	<key>ecDriverFirmware</key>
+	<string>EC 驱动与固件</string>
+	<key>ecIdentity</key>
+	<string>EC 身份</string>
+	<key>ecRegisterAdvanced</key>
+	<string>EC 寄存器（高级）</string>
+	<key>ecSystemCapability</key>
+	<string>EC 与系统能力</string>
+	<key>ecWriteAvailability</key>
+	<string>检测到可用桥接能力后开放 EC 写入功能</string>
+	<key>ec_bridge_and_opencore_driver</key>
+	<string>查看 EC 桥接状态并配置 OpenCore 驱动</string>
+	<key>ec_capabilities</key>
+	<string>EC 功能范围</string>
+	<key>ec_configured_waiting_to_load</key>
+	<string>EC 已配置，等待加载</string>
+	<key>ec_curve_or_mode_changed_read_again</key>
+	<string>EC 曲线或模式已变化，请重新读取</string>
+	<key>ec_curve_points_outside_verified_range_read_only</key>
+	<string>EC 曲线节点不符合已验证范围，保持只读</string>
+	<key>ec_d2_d4_verified_manual_fan_curve_exited</key>
+	<string>EC D2/D4 读回通过；风扇手动曲线已退出</string>
+	<key>ec_driver_configuration</key>
+	<string>EC 驱动配置</string>
+	<key>ec_driver_not_loaded_configure_the_bundled_kext_in_driver_configuratio</key>
+	<string>EC 驱动未加载。请在“驱动配置”中配置新版 Kext，并重启目标机。</string>
+	<key>ec_driver_not_ready</key>
+	<string>EC 驱动未就绪</string>
+	<key>ec_fan_mode</key>
+	<string>EC 风扇模式</string>
+	<key>ec_fan_mode_readback_does_not_match_the_request</key>
+	<string>EC 风扇模式读回值与请求不匹配</string>
+	<key>ec_firmware_charging_control</key>
+	<string>写入 EC，由固件管理充电</string>
+	<key>ec_helper_missing_use_the_complete_m_control_app</key>
+	<string>应用内缺少 EC 写入助手，请使用完整的 MSI Control.app</string>
+	<key>ec_hexadecimal_address_00_to_ff</key>
+	<string>EC 十六进制地址，00 到 FF</string>
+	<key>ec_hexadecimal_byte_value</key>
+	<string>EC 十六进制字节值</string>
+	<key>ec_identity</key>
+	<string>EC 身份</string>
+	<key>ec_interface_not_connected</key>
+	<string>尚未连接 EC 读写接口</string>
+	<key>ec_kext_0_3_2_performs_no_writes_at_startup_battery_fan_and_performanc</key>
+	<string>EC Kext 0.3.2 启动时不写硬件；15P2EMS1.110 的电池、风扇及性能档仅在明确操作与管理员授权后写入。</string>
+	<key>ec_performance_mode_changed_or_driver_too_old_read_again</key>
+	<string>EC 性能档已变化或驱动过旧，请重新读取</string>
+	<key>ec_read_write_driver_loaded</key>
+	<string>EC 读写驱动已加载</string>
+	<key>ec_readback_mismatch_charge_limit_not_confirmed</key>
+	<string>EC 读回值不匹配，未确认充电上限生效</string>
+	<key>ec_readback_verified</key>
+	<string>EC 读回校验通过</string>
+	<key>ec_readback_verified_323174a7</key>
+	<string>EC 读回通过</string>
+	<key>ec_value_is_not_a_single_byte</key>
+	<string>EC 返回值不是单字节</string>
+	<key>editZone</key>
+	<string>编辑区域 %d</string>
+	<key>editingLightingZone</key>
+	<string>编辑区域 %d</string>
+	<key>enabled</key>
+	<string>已开启</string>
+	<key>enter_a_hexadecimal_address_from_00_to_ff</key>
+	<string>请输入 00–FF 范围的十六进制地址</string>
+	<key>enter_a_six_digit_rgb_value_such_as_3366ff</key>
+	<string>请输入六位 RGB 色值，如 #3366FF</string>
+	<key>experimental_24_zone_protocol_matched_effect_not_confirmed</key>
+	<string>匹配实验性 24 区协议；实际效果待确认</string>
+	<key>export_diagnostic_log</key>
+	<string>导出诊断日志…</string>
+	<key>export_diagnostics</key>
+	<string>导出诊断…</string>
+	<key>export_diagnostics_afe611c6</key>
+	<string>；请导出诊断</string>
+	<key>export_failed</key>
+	<string>导出失败</string>
+	<key>extreme</key>
+	<string>狂暴</string>
+	<key>extremeSubtitle</key>
+	<string>APEX / Surge 增强性能</string>
+	<key>extreme_7484d410</key>
+	<string>狂暴</string>
+	<key>failed</key>
+	<string>失败</string>
+	<key>failed_to_open_lighting_interface</key>
+	<string>打开灯控接口失败</string>
+	<key>fan</key>
+	<string>风扇控制</string>
+	<key>fanCurve</key>
+	<string>双风扇曲线</string>
+	<key>fanModeHint</key>
+	<string>自动模式不允许调整；切换手动并应用后可编辑六点曲线，写入需要管理员授权</string>
+	<key>fanNodes</key>
+	<string>风扇节点</string>
+	<key>fanPreviewOnly</key>
+	<string>目标 EC 未提供已验证的自定义 PWM 写入地址；曲线仅作预览</string>
+	<key>fan_1</key>
+	<string>CPU 风扇</string>
+	<key>fan_2</key>
+	<string>GPU 风扇</string>
+	<key>fan_3e41bc3f</key>
+	<string>风扇</string>
+	<key>fan_control_and_charge_limits_require_a_compatible_ec_driver_check_har</key>
+	<string>风扇控制和充电上限需要兼容的 EC 驱动。请前往硬件驱动检查状态；配置前会请你确认，不会自动安装。</string>
+	<key>fan_control_and_charge_limits_require_a_compatible_ec_driver_not_loade</key>
+	<string>风扇控制和充电上限需要兼容的 EC 驱动。未加载不代表未安装，请先查看硬件驱动状态。</string>
+	<key>fan_curve_automatic_hint</key>
+	<string>自动模式下无法手动调节曲线</string>
+	<key>fan_mode_readback_mismatch</key>
+	<string>风扇模式读回值不匹配</string>
+	<key>fan_mode_writes_not_supported_by_firmware_or_driver</key>
+	<string>当前固件或驱动不支持风扇模式写入</string>
+	<key>fasterShorter</key>
+	<string>越短越快</string>
+	<key>feature_report_2_is_not_the_known_64_byte_format_sending_disabled</key>
+	<string>Feature Report 2 不是已知的 64 字节格式，不能发送</string>
+	<key>find_ec_driver</key>
+	<string>查找 EC 驱动</string>
+	<key>forward</key>
+	<string>前进</string>
+	<key>frequencyOnDemand</key>
+	<string>启动时自动请求授权，采样 1 秒平均频率；结果保留并标注采样时间，可手动重新采样。</string>
+	<key>frequencySampling</key>
+	<string>正在采样…</string>
+	<key>full_charge</key>
+	<string>出行充满</string>
+	<key>generalSettings</key>
+	<string>通用</string>
+	<key>globalLightingSettings</key>
+	<string>全局设置</string>
+	<key>green</key>
+	<string>绿</string>
+	<key>hardware_id_not_supported</key>
+	<string>此硬件编号尚未适配</string>
+	<key>hid_enumeration_failed</key>
+	<string>HID 枚举失败</string>
+	<key>highPerformance</key>
+	<string>高性能</string>
+	<key>hot</key>
+	<string>高温</string>
+	<key>incompatible_ec_driver_api_configure_the_bundled_driver_and_restart</key>
+	<string>当前 EC 驱动 API 不兼容，请配置随应用附带的新版驱动并重启。</string>
+	<key>interface_does_not_match_the_protocol_no_reports_sent</key>
+	<string>接口与已知协议不匹配，未发送任何报文</string>
+	<key>interface_read_failed</key>
+	<string>接口读取失败</string>
+	<key>invalid_charge_limit_or_expected_ec_value</key>
+	<string>充电上限或预期 EC 值无效</string>
+	<key>invalid_charge_write_receipt_read_again</key>
+	<string>驱动返回的充电写入记录异常，请重新读取</string>
+	<key>invalid_curve_parameters</key>
+	<string>曲线参数无效</string>
+	<key>invalid_curve_points</key>
+	<string>曲线节点无效</string>
+	<key>invalid_ec_firmware_identity_read_only</key>
+	<string>EC 固件标识格式异常，保持只读</string>
+	<key>invalid_fan_mode_receipt_read_again</key>
+	<string>驱动返回的风扇模式记录异常，请重新读取</string>
+	<key>invalid_lighting_settings_no_reports_sent</key>
+	<string>灯光参数无效，未发送报文</string>
+	<key>invalid_performance_receipt</key>
+	<string>性能档回执异常</string>
+	<key>language</key>
+	<string>语言</string>
+	<key>language_chinese</key>
+	<string>简体中文</string>
+	<key>language_system</key>
+	<string>跟随系统</string>
+	<key>lastApplied</key>
+	<string>最近应用：%@</string>
+	<key>launchAtLogin</key>
+	<string>登录时自动启动</string>
+	<key>lighting</key>
+	<string>灯光控制</string>
+	<key>lightingColor</key>
+	<string>颜色</string>
+	<key>lightingSubtitle</key>
+	<string>24 区配色 · 设置保存在本机，点击应用后发送</string>
+	<key>lightingTitle</key>
+	<string>键盘灯控制</string>
+	<key>lightingZone</key>
+	<string>区域 %d</string>
+	<key>lighting_device_changed_refresh_and_retry_no_reports_sent</key>
+	<string>灯控设备已变化，请刷新接口后重试；未发送报文</string>
+	<key>lighting_disabled_and_saved_to_keyboard_controller</key>
+	<string>灯效已关闭并保存到键盘控制器</string>
+	<key>loads_firmware_saved_lighting_not_necessarily_the_previous_temporary_s</key>
+	<string>重新载入的是固件保存的灯效，不保证恢复操作前的临时状态。</string>
+	<key>logicalZoneHint</key>
+	<string>逻辑编号 1–24；排列不代表实体键盘位置。</string>
+	<key>m_control_crosshair_16_hx_d14vfkg</key>
+	<string>MSI Control · 神影 16 HX D14VFKG</string>
+	<key>manual</key>
+	<string>手动</string>
+	<key>manual_configuration</key>
+	<string>手动配置</string>
+	<key>may_be_partially_applied_read_again</key>
+	<string>可能部分生效；请重新读取</string>
+	<key>mode</key>
+	<string>模式</string>
+	<key>modify_opencore_efi</key>
+	<string>将修改 OpenCore EFI</string>
+	<key>msi_control_center_help</key>
+	<string>MSI Control 帮助</string>
+	<key>multiple_ec_bridge_services_no_reads_or_writes_performed</key>
+	<string>发现多个 EC 桥接服务，未执行读写</string>
+	<key>multiple_interfaces_matched_export_diagnostics_to_identify_the_target</key>
+	<string>发现多个匹配接口；请导出诊断以确认目标</string>
+	<key>no_ec_access_at_startup</key>
+	<string>启动时未访问 EC</string>
+	<key>no_limit_reported_by_firmware</key>
+	<string>固件未报告上限</string>
+	<key>no_msi_steelseries_hid_interface_found</key>
+	<string>未发现 MSI / SteelSeries HID 接口</string>
+	<key>normal</key>
+	<string>正常</string>
+	<key>notApplied</key>
+	<string>尚未应用设置</string>
+	<key>not_applying_an_unrecognized_mode</key>
+	<string>，禁止猜测</string>
+	<key>not_charging</key>
+	<string>未在充电</string>
+	<key>not_confirmed</key>
+	<string>未确认</string>
+	<key>not_now</key>
+	<string>稍后</string>
+	<key>not_read</key>
+	<string>尚未读取</string>
+	<key>off</key>
+	<string>关闭</string>
+	<key>off_5d0ae622</key>
+	<string>关</string>
+	<key>ok</key>
+	<string>好</string>
+	<key>on</key>
+	<string>开</string>
+	<key>on_demand_reads_fan_battery_settings</key>
+	<string>按需读取 · 前往风扇/电池设置</string>
+	<key>one_experimental_lighting_interface_matched</key>
+	<string>已匹配 1 个实验性灯控接口</string>
+	<key>only_automatic_and_manual_are_supported</key>
+	<string>仅支持自动与手动</string>
+	<key>only_charge_register_d7_is_supported_use_8a_e4_10_100</key>
+	<string>当前仅支持充电寄存器 D7，写入值须为 8A–E4（上限 10–100%）</string>
+	<key>openCoreDetected</key>
+	<string>已识别</string>
+	<key>openCoreUnverified</key>
+	<string>未验证</string>
+	<key>openCoreVersionUnavailable</key>
+	<string>未检测到版本信息</string>
+	<key>openPageScan</key>
+	<string>进入页面后读取目标机接口</string>
+	<key>open_ec_driver</key>
+	<string>打开 EC 驱动</string>
+	<key>open_hardware_drivers</key>
+	<string>前往硬件驱动</string>
+	<key>opencore_configuration</key>
+	<string>OpenCore 配置</string>
+	<key>optionalZones</key>
+	<string>分区配色（可选）</string>
+	<key>orange</key>
+	<string>橙</string>
+	<key>passive_diagnostic_driver_loaded</key>
+	<string>被动诊断版已加载</string>
+	<key>pause</key>
+	<string>暂停动画</string>
+	<key>performance</key>
+	<string>性能模式</string>
+	<key>performanceFanControl</key>
+	<string>性能模式与风扇控制</string>
+	<key>performanceQuick</key>
+	<string>快速切换系统功耗与风扇策略</string>
+	<key>performanceSubtitle</key>
+	<string>高性能配置</string>
+	<key>performance_4fbe6bf6</key>
+	<string>高性能</string>
+	<key>performance_mode</key>
+	<string>性能模式</string>
+	<key>performance_reads_not_supported_by_this_firmware</key>
+	<string>当前固件不支持性能档读取</string>
+	<key>performance_switching_requires_msiecbridge_0_3_2_and_supported_firmwar</key>
+	<string>性能切换需要 MSIECBridge 0.3.2 和本机固件</string>
+	<key>performance_write_failed</key>
+	<string>性能档写入失败</string>
+	<key>period</key>
+	<string>周期</string>
+	<key>plugged_in</key>
+	<string>长期接电</string>
+	<key>power</key>
+	<string>电源</string>
+	<key>powerInformation</key>
+	<string>macOS 电源信息</string>
+	<key>purple</key>
+	<string>紫</string>
+	<key>quiet</key>
+	<string>安静</string>
+	<key>quietSubtitle</key>
+	<string>低噪音配置</string>
+	<key>quiet_04403982</key>
+	<string>安静</string>
+	<key>rainbow</key>
+	<string>彩虹</string>
+	<key>readByte</key>
+	<string>读取字节</string>
+	<key>readEC</key>
+	<string>读取 EC</string>
+	<key>read_ec</key>
+	<string>读取 EC</string>
+	<key>read_ec_again_before_continuing</key>
+	<string>；请重新读取 EC 后再操作</string>
+	<key>read_ec_firmware_identity</key>
+	<string>读取 EC 固件标识</string>
+	<key>read_the_ec_curve_first</key>
+	<string>请先读取 EC 曲线</string>
+	<key>readback_matches</key>
+	<string>读回一致</string>
+	<key>readback_mismatch</key>
+	<string>读回不匹配</string>
+	<key>reading</key>
+	<string>读取中</string>
+	<key>reading_d4_and_verifying_fan_mode</key>
+	<string>正在读取 D4 并校验风扇模式…</string>
+	<key>reading_ec_fan_state</key>
+	<string>正在读取 EC 风扇状态…</string>
+	<key>reading_ec_firmware_and_charge_settings</key>
+	<string>正在读取 EC 固件与充电设置…</string>
+	<key>reading_ec_performance_mode</key>
+	<string>正在读取 EC 性能档…</string>
+	<key>reading_firmware_and_charge_limit</key>
+	<string>点击“读取 EC”获取固件和当前充电上限</string>
+	<key>reading_lighting_interface</key>
+	<string>正在读取灯控接口…</string>
+	<key>ready</key>
+	<string>系统已就绪</string>
+	<key>red</key>
+	<string>红</string>
+	<key>refresh</key>
+	<string>刷新</string>
+	<key>refreshDriverStatus</key>
+	<string>刷新驱动状态</string>
+	<key>refreshInterface</key>
+	<string>刷新接口</string>
+	<key>refresh_data</key>
+	<string>刷新数据</string>
+	<key>refresh_the_lighting_interface_on_the_target_msi</key>
+	<string>请在目标 MSI 上刷新灯控接口</string>
+	<key>registerHint</key>
+	<string>可读取 00–FF 单字节。当前写入适配充电寄存器 D7，值为上限百分比加 0x80；80% 对应 D0。</string>
+	<key>reports</key>
+	<string>个报文</string>
+	<key>reports_sent_check_the_keyboard_to_confirm</key>
+	<string>报文已发送；请观察目标机键盘确认效果</string>
+	<key>restart_and_boot_through_the_configured_opencore_then_check_again</key>
+	<string>请重启电脑并从配置过的 OpenCore 启动，然后重新检测。</string>
+	<key>ripple</key>
+	<string>舞动</string>
+	<key>running_background_playback</key>
+	<string>运行中 · 后台代理持续播放</string>
+	<key>sampleEverySecond</key>
+	<string>CPU 使用率 %d%% · 每秒采样</string>
+	<key>sampleFrequency</key>
+	<string>采样 CPU 频率…</string>
+	<key>savedLighting</key>
+	<string>载入键盘已保存灯效</string>
+	<key>sceneMode</key>
+	<string>场景模式</string>
+	<key>seconds</key>
+	<string>%.1f 秒</string>
+	<key>select_configuration_back_up_and_configure_ec_kext_0_3_2</key>
+	<string>选择配置文件，备份并配置 EC Kext 0.3.2</string>
+	<key>select_efi_oc_config_plist_an_efi_volume_or_an_efi_oc_folder_mount_efi</key>
+	<string>推荐直接选中 EFI/OC/config.plist；也可以选择 EFI 卷根目录、EFI 文件夹或 OC 文件夹。若 EFI 尚未挂载，请先挂载。</string>
+	<key>send_failed</key>
+	<string>发送失败</string>
+	<key>sending_lighting_settings</key>
+	<string>正在发送灯光设置…</string>
+	<key>sensorFan2Speed</key>
+	<string>GPU 风扇</string>
+	<key>sensorFanSpeed</key>
+	<string>CPU 风扇</string>
+	<key>sensorMissing</key>
+	<string>传感器不可用</string>
+	<key>sensorMissingHint</key>
+	<string>悬停查看原因</string>
+	<key>sensorReadOnly</key>
+	<string>传感器每秒只读采样；缺失项显示 —，悬停查看来源或错误。</string>
+	<key>sent</key>
+	<string>，已发送</string>
+	<key>settings</key>
+	<string>设置</string>
+	<key>settings_da9fc8ba</key>
+	<string>设置…</string>
+	<key>silent</key>
+	<string>静音</string>
+	<key>six_digit_rgb_hexadecimal_color</key>
+	<string>RGB 十六进制色值，六位</string>
+	<key>solid</key>
+	<string>纯色模式</string>
+	<key>solid_ff922e02</key>
+	<string>纯色</string>
+	<key>source</key>
+	<string>源码</string>
+	<key>startupSettings</key>
+	<string>启动与运行</string>
+	<key>strongCooling</key>
+	<string>强冷</string>
+	<key>switch_performance_mode</key>
+	<string>切换性能档</string>
+	<key>switching_ec_performance_mode</key>
+	<string>正在切换 EC 性能档…</string>
+	<key>system</key>
+	<string>系统</string>
+	<key>systemMonitor</key>
+	<string>系统监控</string>
+	<key>temperature_fan_control_percentage</key>
+	<string>温度 / 风扇控制百分比</string>
+	<key>thermalState</key>
+	<string>热状态</string>
+	<key>turnOff</key>
+	<string>关灯</string>
+	<key>turnOn</key>
+	<string>开灯</string>
+	<key>unable_to_export_diagnostic_log</key>
+	<string>无法导出诊断日志</string>
+	<key>unexpected_charge_register_writes_disabled</key>
+	<string>充电寄存器值异常，暂不能写入</string>
+	<key>unknown</key>
+	<string>未知</string>
+	<key>unknown_mode</key>
+	<string>未知模式</string>
+	<key>unknown_performance_mode</key>
+	<string>未识别性能档</string>
+	<key>unrecognized</key>
+	<string>未识别</string>
+	<key>unsupported_firmware_ec_remains_read_only</key>
+	<string>固件尚未适配，EC 保持只读</string>
+	<key>updatedAt</key>
+	<string>更新于 %@</string>
+	<key>value</key>
+	<string>值</string>
+	<key>version</key>
+	<string>版本</string>
+	<key>waiting_for_administrator_authorization_writes_will_be_verified</key>
+	<string>等待管理员授权，写入后将读回校验…</string>
+	<key>waiting_for_ec_driver</key>
+	<string>等待 EC 驱动</string>
+	<key>warm</key>
+	<string>温热</string>
+	<key>wave</key>
+	<string>波浪</string>
+	<key>white</key>
+	<string>白</string>
+	<key>writeVerify</key>
+	<string>写入并校验</string>
+	<key>write_and_verify_charge_limit</key>
+	<string>写入并读回充电上限</string>
+	<key>write_and_verify_cooler_boost</key>
+	<string>写入强冷并读回</string>
+	<key>write_and_verify_fan_mode</key>
+	<string>写入并读回风扇模式</string>
+	<key>write_fan_curve</key>
+	<string>写入风扇曲线</string>
+	<key>write_receipt_does_not_match_read_again_to_verify</key>
+	<string>写入记录与请求不匹配，未确认生效，请重新读取</string>
+	<key>writing</key>
+	<string>写入中</string>
+	<key>yellow</key>
+	<string>黄</string>
+	<key>zoneColor</key>
+	<string>区域 %d · 颜色</string>
+	<key>zoneRGB</key>
+	<string>24 区 RGB</string>
+	<key>充电状态</key>
+	<string>充电状态</string>
+    <key>shortcutPermissions</key><string>快捷键权限</string>
+    <key>inputMonitoring</key><string>输入监控</string>
+    <key>bluetoothPermission</key><string>蓝牙</string>
+    <key>permissionAllowed</key><string>已允许</string>
+    <key>permissionRequired</key><string>需要授权</string>
+    <key>enableInputMonitoring</key><string>开启输入监控</string>
+    <key>enableBluetoothPermission</key><string>允许蓝牙访问</string>
+    <key>shortcutPermissionContext</key><string>请在“系统设置 → 隐私与安全性 → 输入监控”中允许 MSI Control。Fn+F5 切换数字麦克风静音，Fn+F6 切换蓝牙。软件运行期间快捷键持续生效；授权后可能需要重新打开软件。</string>
+    <key>standaloneHotkeysRunning</key><string>MSI Hotkeys 正在运行，目前由它处理快捷键。退出它后，将由 MSI Control 接管。</string>
+    <key>dragAppForInputMonitoring</key><string>将此图标拖入“输入监控”列表，再打开 MSI Control 旁的开关。</string>
+    <key>dragAppForBluetooth</key><string>将此图标拖入“蓝牙”列表，再打开 MSI Control 旁的开关。</string>
+    <key>osdSetting</key><string>显示快捷键状态提示（OSD）</string>
+    <key>osdCaps</key><string>大写锁定</string>
+    <key>osdSpeaker</key><string>扬声器静音</string>
+    <key>osdMicrophone</key><string>麦克风静音</string>
+    <key>osdBluetooth</key><string>蓝牙</string>
+    <key>osdKeyboardBrightness</key><string>键盘背光亮度</string>
+    <key>osdFnLock</key><string>Fn 锁定</string>
+    <key>osdUnconfirmed</key><string>状态未确认</string>
+    <key>osdOn</key><string>已开启</string>
+    <key>osdOff</key><string>已关闭</string>
+</dict>
+</plist>
