@@ -1,0 +1,23 @@
+name: Expand source tree
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  expand:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify and expand source
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "7e12d27d0f1ae4b8ec0445d9183f77b5636ba46ed96b18522194e695fc7f1638  MSI-Control-Source-v0.3.23.zip" | sha256sum -c -
+          unzip -q MSI-Control-Source-v0.3.23.zip -d "$RUNNER_TEMP/source"
+          cp -a "$RUNNER_TEMP/source/MSI-Control/." .
+          git rm MSI-Control-Source-v0.3.23.zip
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Sources Drivers Tests Tools Design Package.swift Run.command README.md .gitignore
+          git commit -m "Expand complete source tree"
+          git push
