@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="Tools/AppIcon-Master.png" alt="MSI Control 软件图标" width="128" height="128">
+  <img src="Tools/AppIcon-README.png" alt="MSI Control 软件图标" width="128" height="128">
 </p>
 
 # MSI Control for macOS
