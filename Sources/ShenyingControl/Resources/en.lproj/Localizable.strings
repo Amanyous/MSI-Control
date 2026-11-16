@@ -327,7 +327,7 @@
 	<key>fanCurve</key>
 	<string>Dual fan curves</string>
 	<key>fanModeHint</key>
-	<string>Automatic mode locks editing; apply Manual to edit curves. Writing requires administrator authorization.</string>
+	<string>Automatic mode locks editing; apply Manual to edit curves. Once the background helper is approved, applying curves requires no further password prompts.</string>
 	<key>fanNodes</key>
 	<string>Fan points</string>
 	<key>fanPreviewOnly</key>
@@ -731,5 +731,8 @@
     <key>osdUnconfirmed</key><string>State not confirmed</string>
     <key>osdOn</key><string>On</string>
     <key>osdOff</key><string>Off</string>
+    <key>controlPermissions</key><string>Control Permissions Needed</string>
+    <key>authorizePowerControl</key><string>Authorize Hardware Control</string>
+    <key>powerAuthorizationContext</key><string>Approve the MSI Control background helper once for performance presets, fan control, and EFI mounting without repeated password prompts.</string>
 </dict>
 </plist>

@@ -12,11 +12,17 @@ struct ECControlChecks {
         check(BatteryStatus.from(description: ["Voltage": 16000, "Current": -2000]).powerWatts == -32, "Standard discharge current")
         check(BatteryStatus.from(description: ["Voltage": 16000, "Current": 2000, kIOPSIsChargingKey as String: true]).powerWatts == 32, "Charging power")
         check(BatteryStatus.from(description: ["Voltage": 16000, "Current": 0]).powerWatts == 0, "Zero current")
-        for api in 4...7 {
+        for api in 4...9 {
             check(ECBridgeSnapshot(apiVersion: api, firmware: "15P2EMS1.110", chargeByte: 0xD0).canWriteChargeLimit, "Supported API \(api)")
             check(!ECBridgeSnapshot(apiVersion: api, firmware: "15P2EMS1.110", chargeByte: 0xFF).canWriteChargeLimit, "Invalid byte stays blocked")
         }
-        check(!ECBridgeSnapshot(apiVersion: 8, firmware: "15P2EMS1.110", chargeByte: 0xD0).canWriteChargeLimit, "Unknown API stays blocked")
+        check(!ECBridgeSnapshot(apiVersion: 12, firmware: "15P2EMS1.110", chargeByte: 0xD0).canWriteChargeLimit, "Unknown API stays blocked")
+        check(ECBridgeSnapshot(apiVersion: 10, firmware: "14C1EMS1.199", chargeByte: 0xD0).canWriteChargeLimit, "Imported family")
+        check(!ECBridgeSnapshot(apiVersion: 9, firmware: "14C1EMS1.199", chargeByte: 0xD0).canWriteChargeLimit, "Old kernel cannot write imported family")
+        check(ECFeatureProfile.match("14C1EMS1.199")?.chargeAddress == 0xEF, "Gen1 address")
+        check(ECFeatureProfile.match("15P2EMS1.199")?.chargeAddress == 0xD7, "Gen2 address")
+        check(!ECChargePolicy.supports("16P5EMS1.199"), "Unsupported charging")
+        check(ECChargePolicy.supports("15P4EMS1.106"), "Patch versions share upstream family")
         check(abs(BatteryStatus.health(fullChargeCapacity: 5159, designCapacity: 5700)! - 90.5087719) < 0.0001, "Raw capacity health")
         check(BatteryStatus.health(fullChargeCapacity: 100, designCapacity: 5700) == nil, "Reject normalized percentage")
         check(BatteryStatus.health(fullChargeCapacity: nil, designCapacity: 5700) == nil, "Missing capacity")
@@ -37,7 +43,7 @@ struct ECControlChecks {
             let raw = UInt8(number)
             let expected = (10...100).contains(number & 0x7F)
             check((ECChargePolicy.decode(raw) != nil) == expected, "Decode byte \(number)")
-            check(ECChargePolicy.validCurrent(raw) == (raw == 0x80 || expected), "Current byte \(number)")
+            check(ECChargePolicy.validCurrent(raw) == (raw & 0x80 != 0 && (raw == 0x80 || expected)), "Current byte \(number)")
         }
         for (input, value) in [("D7", 0xD7), ("0xd0", 0xD0), (" 0Xff\n", 0xFF), ("0", 0), ("a", 10)] {
             check(ECChargePolicy.parseByte(input) == UInt8(value), "Hex parse \(input)")
@@ -49,7 +55,7 @@ struct ECControlChecks {
             check(ECChargePolicy.supports(firmware), "Supported firmware")
             check(ECChargePolicy.firmware(from: Array(firmware.utf8)) == firmware, "Firmware bytes")
         }
-        for firmware in ["15P4EMS1.106", "15P4EMS1.107x", "15p4ems1.107", "15P4EMS1.07", "", "15P4EMS1.107 "] {
+        for firmware in ["15P4EMS1.107x", "15p4ems1.107", "15P4EMS1.07", "", "15P4EMS1.107 "] {
             check(!ECChargePolicy.supports(firmware), "Exact firmware allowlist")
         }
         check(ECChargePolicy.firmware(from: Array("15P4EMS1.107".utf8) + [0]) == nil, "Firmware length")

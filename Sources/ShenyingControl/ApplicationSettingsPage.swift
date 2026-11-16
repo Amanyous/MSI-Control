@@ -3,6 +3,7 @@ import ServiceManagement
 import ECControl
 
 struct ApplicationSettingsPage: View {
+    @ObservedObject var model: MSIControlModel
     @EnvironmentObject private var localization: AppLocalization
     @Environment(\.scenePhase) private var scenePhase
     @AppStorage("mcontrol.appearance") private var appearance = "system"
@@ -21,7 +22,7 @@ struct ApplicationSettingsPage: View {
         ScrollView {
           VStack(alignment: .leading, spacing: 20) {
             VStack(alignment: .leading, spacing: 16) {
-                Text(t("generalSettings")).font(.caption).foregroundStyle(.secondary)
+                Text(chinese ? "通用" : "General").font(.caption).foregroundStyle(.secondary)
                 LabeledContent(t("appLanguage")) {
                 Picker(t("language"), selection: $localization.language) {
                     ForEach(AppLanguage.allCases) { language in
@@ -29,6 +30,28 @@ struct ApplicationSettingsPage: View {
                     }
                 }.labelsHidden().pickerStyle(.menu).frame(width: 180)
                 }.frame(maxWidth: .infinity)
+                LabeledContent(t("appAppearance")) {
+                    Picker(t("appAppearance"), selection: $appearance) {
+                        Text(t("appearanceSystem")).tag("system")
+                        Text(t("appearanceLight")).tag("light")
+                        Text(t("appearanceDark")).tag("dark")
+                    }.labelsHidden().pickerStyle(.segmented).frame(width: 300)
+                }.frame(maxWidth: .infinity)
+                loginControls
+            }
+            Divider()
+            VStack(alignment: .leading, spacing: 16) {
+                Text(chinese ? "功能" : "Features").font(.caption).foregroundStyle(.secondary)
+                LabeledContent(chinese ? "节能档使用 EC 原生节能" : "Use EC eco in Energy Saving") {
+                    Toggle("EC eco", isOn: Binding(
+                        get: { model.ecoPreference },
+                        set: { model.updateEcoPreference($0) }
+                    ))
+                    .labelsHidden().toggleStyle(.switch)
+                    .disabled(model.performanceBusy)
+                }
+                Text(chinese ? "仅在节能档生效，可能关闭键盘背光。" : "Only applies to Energy Saving; may turn off keyboard lighting.")
+                    .font(.caption).foregroundStyle(.secondary)
                 LabeledContent(t("osdSetting")) {
                     Toggle(t("osdSetting"), isOn: $shortcutOSD)
                         .labelsHidden().toggleStyle(.switch)
@@ -62,17 +85,26 @@ struct ApplicationSettingsPage: View {
                          : "Install the Num Lock keyboard driver and restart first.")
                         .font(.caption).foregroundStyle(.secondary)
                 }
-                LabeledContent(t("appAppearance")) {
-                    Picker(t("appAppearance"), selection: $appearance) {
-                        Text(t("appearanceSystem")).tag("system")
-                        Text(t("appearanceLight")).tag("light")
-                        Text(t("appearanceDark")).tag("dark")
-                    }.labelsHidden().pickerStyle(.segmented).frame(width: 300)
-                }.frame(maxWidth: .infinity)
+                ECCommonControlsView()
             }
-            Divider()
-            VStack(alignment: .leading, spacing: 16) {
-                Text(t("startupSettings")).font(.caption).foregroundStyle(.secondary)
+          }
+          .labeledContentStyle(SettingsRowStyle())
+          .frame(maxWidth: .infinity, alignment: .leading)
+          .padding(24)
+          .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .task { await refreshTouchpad() }
+        .onAppear { loginStatus = SMAppService.mainApp.status }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active {
+                loginStatus = SMAppService.mainApp.status
+                Task { await refreshTouchpad() }
+            }
+        }
+    }
+
+    private var loginControls: some View {
+            Group {
                 LabeledContent(t("launchAtLogin")) {
                 Toggle(t("launchAtLogin"), isOn: Binding(
                     get: { loginStatus == .enabled || loginStatus == .requiresApproval },
@@ -95,20 +127,6 @@ struct ApplicationSettingsPage: View {
                 }
                 if let loginError { Text(loginError).font(.caption).foregroundStyle(.secondary).textSelection(.enabled) }
             }
-          }
-          .labeledContentStyle(SettingsRowStyle())
-          .frame(maxWidth: .infinity, alignment: .leading)
-          .padding(24)
-          .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .task { await refreshTouchpad() }
-        .onAppear { loginStatus = SMAppService.mainApp.status }
-        .onChange(of: scenePhase) { _, phase in
-            if phase == .active {
-                loginStatus = SMAppService.mainApp.status
-                Task { await refreshTouchpad() }
-            }
-        }
     }
 
     @MainActor private func refreshTouchpad() async {

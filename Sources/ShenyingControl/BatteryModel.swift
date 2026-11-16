@@ -16,6 +16,7 @@ final class BatteryModel: ObservableObject {
     @Published var valueText = "D0"
     @Published private(set) var registerDescription = "尚未读取"
     private let readBattery: @Sendable () async -> BatteryStatus
+    private let readECBattery: @Sendable () async throws -> ECBatteryReading?
     private let readEC: @Sendable () async throws -> ECBridgeSnapshot
     private let readByte: @Sendable (UInt8) async throws -> UInt8
     private let writeLimit: @Sendable (Int, UInt8) async throws -> ECWriteReceipt
@@ -23,6 +24,9 @@ final class BatteryModel: ObservableObject {
     init(
         readBattery: @escaping @Sendable () async -> BatteryStatus = {
             await Task.detached { BatteryStatus.readSystem() }.value
+        },
+        readECBattery: @escaping @Sendable () async throws -> ECBatteryReading? = {
+            try await Task.detached { try ECBridgeConnection().batteryReading() }.value
         },
         readEC: @escaping @Sendable () async throws -> ECBridgeSnapshot = {
             try await Task.detached { try ECBridgeConnection().snapshot() }.value
@@ -35,18 +39,26 @@ final class BatteryModel: ObservableObject {
         }
     ) {
         self.readBattery = readBattery; self.readEC = readEC
+        self.readECBattery = readECBattery
         self.readByte = readByte; self.writeLimit = writeLimit
         // Constructing the model never reads or writes EC, or restores a write.
     }
 
     var canApply: Bool { !isBusy && ec?.canWriteChargeLimit == true && ECChargePolicy.encode(selectedLimit) != nil }
     var rawWritePercent: Int? {
-        guard ECChargePolicy.parseByte(addressText) == UInt8(ECChargePolicy.address),
+        guard let firmware = ec?.firmware,
+              let address = ECFeatureProfile.match(firmware)?.chargeAddress,
+              ECChargePolicy.parseByte(addressText) == address,
               let value = ECChargePolicy.parseByte(valueText), let percent = ECChargePolicy.decode(value),
               ECChargePolicy.encode(percent) == value else { return nil }
         return percent
     }
     var canWriteRaw: Bool { !isBusy && ec?.canWriteChargeLimit == true && rawWritePercent != nil }
+    private var chargeAddressDescription: String {
+        guard let firmware = ec?.firmware,
+              let address = ECFeatureProfile.match(firmware)?.chargeAddress else { return "—" }
+        return String(format: "%02X", address)
+    }
     var firmwareDescription: String { ec?.firmware ?? "尚未读取" }
     var appliedDescription: String {
         if let percent = ec?.chargeLimit { return "\(percent)%" }
@@ -55,11 +67,14 @@ final class BatteryModel: ObservableObject {
     var capabilityDescription: String {
         guard let ec else { return "尚未连接 EC 读写接口" }
         if !ECChargePolicy.supports(ec.firmware) { return "固件尚未适配，EC 保持只读" }
-        if !(2...8).contains(ec.apiVersion) { return "EC 驱动 API \(ec.apiVersion) 不兼容，暂不能写入" }
+        if !ECChargePolicy.supportsAPI(ec.apiVersion) { return "EC 驱动 API \(ec.apiVersion) 不兼容，暂不能写入" }
+        if !ECChargePolicy.supports(ec.firmware, api: ec.apiVersion) {
+            return "当前固件系列需要 API 10 驱动，配置新版驱动并重启后可写入"
+        }
         if ec.apiVersion < 4 && ec.firmware == "15P2EMS1.110" { return "需配置 MSIECBridge 0.3.1 或更新版本并重启" }
         if !ec.canWriteChargeLimit {
-            return ec.chargeByte.map { String(format: "充电寄存器 D7=0x%02X 无法识别，暂不能写入", $0) }
-                ?? "未读取到充电寄存器 D7，暂不能写入"
+            return ec.chargeByte.map { String(format: "充电寄存器 %@=0x%02X 无法识别，暂不能写入", chargeAddressDescription, $0) }
+                ?? "未读取到充电寄存器 \(chargeAddressDescription)，暂不能写入"
         }
         return "已匹配充电控制，可读写并校验"
     }
@@ -67,7 +82,7 @@ final class BatteryModel: ObservableObject {
     func refreshBattery() async {
         let system = await readBattery()
         do {
-            let ecReading = try await Task.detached { try ECBridgeConnection().batteryReading() }.value
+            let ecReading = try await readECBattery()
             if let ecReading {
                 let charging = ecReading.currentMilliamps > 50
                 battery = BatteryStatus(
@@ -98,6 +113,9 @@ final class BatteryModel: ObservableObject {
         do {
             let snapshot = try await readEC()
             ec = snapshot
+            if let address = ECFeatureProfile.match(snapshot.firmware)?.chargeAddress {
+                addressText = String(format: "%02X", address)
+            }
             if let limit = snapshot.chargeLimit { selectedLimit = limit }
             if let value = snapshot.chargeByte { valueText = String(format: "%02X", value) }
             status = capabilityDescription
@@ -126,7 +144,7 @@ final class BatteryModel: ObservableObject {
     func applyLimit() async { await apply(percent: selectedLimit) }
     func writeRegister() async {
         guard let percent = rawWritePercent else {
-            registerDescription = "当前仅支持充电寄存器 D7，写入值须为 8A–E4（上限 10–100%）"
+            registerDescription = "当前仅支持充电寄存器 \(chargeAddressDescription)，写入值须为 8A–E4（上限 10–100%）"
             return
         }
         await apply(percent: percent)
@@ -149,7 +167,7 @@ final class BatteryModel: ObservableObject {
             selectedLimit = percent
             valueText = String(format: "%02X", receipt.after)
             lastWrite = receipt
-            registerDescription = String(format: "EC 0xD7：0x%02X → 0x%02X，读回一致", receipt.before, receipt.after)
+            registerDescription = String(format: "EC 0x%@：0x%02X → 0x%02X，读回一致", chargeAddressDescription, receipt.before, receipt.after)
             status = "充电上限 \(percent)% · EC 读回校验通过"
             successfulApplyCount += 1
         } catch {

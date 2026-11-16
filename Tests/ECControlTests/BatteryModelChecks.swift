@@ -110,11 +110,13 @@ struct BatteryModelChecks {
         print("9 battery model check groups passed with a fake backend; no hardware accessed.")
     }
 
-    private static func require(_ condition: Bool) { precondition(condition) }
+    private static func require(_ condition: Bool, file: StaticString = #file, line: UInt = #line) {
+        precondition(condition, "Battery model assertion", file: file, line: line)
+    }
 
     @MainActor
     private static func makeModel(_ backend: FakeECBackend) -> BatteryModel {
-        BatteryModel(readBattery: { await backend.battery() }, readEC: { try await backend.snapshot() },
+        BatteryModel(readBattery: { await backend.battery() }, readECBattery: { nil }, readEC: { try await backend.snapshot() },
                      readByte: { try await backend.read($0) }, writeLimit: { try await backend.write($0, expected: $1) })
     }
 }

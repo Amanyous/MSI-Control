@@ -20,6 +20,7 @@ xcrun swiftc -swift-version 6 -module-cache-path .build/ModuleCache \
   Sources/ShenyingControl/Localization.swift \
   Tests/KeyboardLightingTests/KeyboardLightingModelChecks.swift \
   "$BUILD_PATH/ECControl.build/ECChargePolicy.swift.o" \
+  "$BUILD_PATH/ECControl.build/ECFeatureProfiles.swift.o" \
   "$BUILD_PATH/ECControl.build/ECBridgeConnection.swift.o" \
   "$BUILD_PATH/ECControl.build/BatteryStatus.swift.o" \
   "$BUILD_PATH/KeyboardLighting.build/LightingConfiguration.swift.o" \
@@ -30,13 +31,14 @@ xcrun swiftc -swift-version 6 -module-cache-path .build/ModuleCache \
   -o work/keyboard-lighting-model-checks
 ./work/keyboard-lighting-model-checks
 xcrun swiftc -swift-version 6 -module-cache-path .build/ModuleCache \
-  Sources/ECControl/ECChargePolicy.swift Sources/ECControl/BatteryStatus.swift \
+  Sources/ECControl/ECFeatureProfiles.swift Sources/ECControl/ECChargePolicy.swift Sources/ECControl/BatteryStatus.swift \
   Tests/ECControlTests/ECControlChecks.swift -o work/ec-control-checks
 ./work/ec-control-checks
 xcrun swiftc -swift-version 6 -module-cache-path .build/ModuleCache \
   -I "$BUILD_PATH/Modules" \
   Sources/ShenyingControl/BatteryModel.swift Tests/ECControlTests/BatteryModelChecks.swift \
   "$BUILD_PATH/ECControl.build/ECChargePolicy.swift.o" \
+  "$BUILD_PATH/ECControl.build/ECFeatureProfiles.swift.o" \
   "$BUILD_PATH/ECControl.build/ECBridgeConnection.swift.o" \
   "$BUILD_PATH/ECControl.build/BatteryStatus.swift.o" \
   -o work/battery-model-checks

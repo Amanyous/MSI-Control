@@ -4,6 +4,7 @@ import ECControl
 import IOKit
 import IOKit.ps
 import KeyboardLighting
+import PowerServiceProtocol
 import SwiftUI
 import SystemSensors
 
@@ -64,11 +65,45 @@ struct MSIControlApp: App {
 
 @MainActor
 final class ControlAppDelegate: NSObject, NSApplicationDelegate {
+    static var terminating = false
+    static var powerChangeInProgress = false
     func applicationDidFinishLaunching(_ notification: Notification) {
         IntegratedHotkeys.shared.start()
     }
     func applicationWillTerminate(_ notification: Notification) {
         IntegratedHotkeys.shared.stop()
+    }
+    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+        guard !Self.terminating else { return .terminateLater }
+        Self.terminating = true
+        Task { @MainActor in
+            do {
+                for _ in 0..<150 where Self.powerChangeInProgress {
+                    try await Task.sleep(for: .milliseconds(100))
+                }
+                guard !Self.powerChangeInProgress else {
+                    throw ECError.unavailable("档位切换尚未结束，请稍后再退出")
+                }
+                try await Task.detached {
+                    let bridge = try ECBridgeConnection()
+                    guard bridge.apiVersion >= 13 else { return }
+                    let status = try bridge.powerControlStatus()
+                    if status.owned {
+                        _ = try PerformanceAdministrator.apply(
+                            nil, eco: false, expected: status, allowRegistration: false)
+                    }
+                }.value
+                sender.reply(toApplicationShouldTerminate: true)
+            } catch {
+                Self.terminating = false
+                let failure = NSAlert()
+                failure.messageText = "未能确认恢复，已取消退出"
+                failure.informativeText = error.localizedDescription
+                failure.runModal()
+                sender.reply(toApplicationShouldTerminate: false)
+            }
+        }
+        return .terminateLater
     }
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
         false
@@ -104,18 +139,21 @@ enum AppSection: String, CaseIterable, Identifiable {
 }
 
 enum PerformanceMode: String, CaseIterable, Identifiable {
-    case quiet = "安静", balanced = "平衡", performance = "高性能", extreme = "狂暴"
+    case energySaving = "节能", quiet = "安静", balanced = "平衡", performance = "高性能", extreme = "极致"
+    var cpuPreset: CPUPowerPreset { CPUPowerPreset(rawValue: Self.allCases.firstIndex(of: self)!)! }
     var id: String { rawValue }
     @MainActor var title: String {
         switch self {
+        case .energySaving: AppLocalization.shared.resolvedLanguage == .chinese ? "节能" : "Energy Saving"
         case .quiet: t("quiet")
         case .balanced: t("balanced")
         case .performance: t("highPerformance")
-        case .extreme: t("extreme")
+        case .extreme: AppLocalization.shared.resolvedLanguage == .chinese ? "极致" : "Extreme"
         }
     }
     @MainActor var subtitle: String {
         switch self {
+        case .energySaving: "25 / 35 W"
         case .quiet: t("quietSubtitle")
         case .balanced: t("balancedSubtitle")
         case .performance: t("performanceSubtitle")
@@ -124,6 +162,7 @@ enum PerformanceMode: String, CaseIterable, Identifiable {
     }
     @MainActor var localizedSubtitle: String {
         switch self {
+        case .energySaving: "25 / 35 W"
         case .quiet: t("quietSubtitle")
         case .balanced: t("balancedSubtitle")
         case .performance: t("performanceSubtitle")
@@ -132,6 +171,7 @@ enum PerformanceMode: String, CaseIterable, Identifiable {
     }
     var symbol: String {
         switch self {
+        case .energySaving: "leaf.fill"
         case .quiet: "leaf"
         case .balanced: "scalemass"
         case .performance: "gauge.with.dots.needle.67percent"
@@ -216,7 +256,52 @@ final class MSIControlModel: ObservableObject {
     @Published var performanceMode: PerformanceMode?
     @Published private(set) var performanceBusy = false
     @Published private(set) var performanceStatus = "正在读取 EC 性能档…"
-    private var performanceBytes: (UInt8, UInt8)?
+    private var powerControlState: CPUPowerControlStatus?
+    @Published private(set) var ecoPreference = UserDefaults.standard.bool(forKey: "mcontrol.energySavingEC")
+    var powerControlAvailable: Bool {
+        powerControlState.map { $0.available && !$0.conflict } ?? false
+    }
+    var canRestorePower: Bool {
+        powerControlState.map { $0.owned && $0.available } ?? false
+    }
+    private var powerStateObserver: NSObjectProtocol?
+    private var powerRefreshTimer: Timer?
+    private var startupPowerAttempted = false
+    @Published private(set) var powerServiceReady = PerformanceAdministrator.serviceEnabled
+    @Published private(set) var powerAuthorizationBusy = false
+    @Published private(set) var powerAuthorizationError: String?
+
+    func authorizePowerService() {
+        guard !powerAuthorizationBusy else { return }
+        powerAuthorizationBusy = true
+        powerAuthorizationError = nil
+        do { try PerformanceAdministrator.requestAuthorization() }
+        catch {
+            powerAuthorizationError = error.localizedDescription
+        }
+        powerServiceReady = PerformanceAdministrator.serviceEnabled
+        powerAuthorizationBusy = false
+    }
+
+    init() {
+        powerStateObserver = NSWorkspace.shared.notificationCenter.addObserver(
+            forName: NSWorkspace.didWakeNotification, object: nil, queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in self?.readPerformance() }
+        }
+        powerRefreshTimer = Timer.scheduledTimer(withTimeInterval: 3, repeats: true) { [weak self] _ in
+            Task { @MainActor in self?.readPerformance() }
+        }
+        readPerformance()
+        Task { @MainActor [weak self] in
+            do {
+                try await Task.detached { try PerformanceAdministrator.updateApprovedService() }.value
+            } catch {
+                self?.powerAuthorizationError = error.localizedDescription
+            }
+            self?.readPerformance()
+        }
+    }
     @Published var curvePoints: [CurvePoint] = [
         CurvePoint(id: 0, temperature: 0, speed: 40), CurvePoint(id: 1, temperature: 50, speed: 45), CurvePoint(id: 2, temperature: 57, speed: 55), CurvePoint(id: 3, temperature: 64, speed: 65), CurvePoint(id: 4, temperature: 70, speed: 75), CurvePoint(id: 5, temperature: 76, speed: 90)
     ]
@@ -355,7 +440,7 @@ final class MSIControlModel: ObservableObject {
                 self.coolerBoost = state.2 & 0x80 != 0
                 self.loadedCurves = [state.3, state.4]
                 if let mode = ECFanMode(rawValueByte: state.1) {
-                    self.selectedFanMode = mode == .silent ? .automatic : mode
+                    self.selectedFanMode = mode
                 }
                 if let cpu = state.3 {
                     self.curvePoints = zip(cpu.temperatures, cpu.speeds).enumerated().map {
@@ -432,7 +517,7 @@ final class MSIControlModel: ObservableObject {
                     self.coolerBoost = state.2 & 0x80 != 0
                     self.loadedCurves = [state.3, state.4]
                     if let current = ECFanMode(rawValueByte: state.1) {
-                        self.selectedFanMode = current == .silent ? .automatic : current
+                        self.selectedFanMode = current
                     }
                 } catch {
                     self.loadedMode = nil
@@ -444,23 +529,55 @@ final class MSIControlModel: ObservableObject {
         }
     }
     func applyPerformance(_ mode: PerformanceMode) {
-        guard !performanceBusy, mode != .extreme, let expected = performanceBytes else { return }
+        performPowerChange(mode)
+    }
+    func updateEcoPreference(_ enabled: Bool) {
+        guard !performanceBusy else { return }
+        ecoPreference = enabled
+        UserDefaults.standard.set(enabled, forKey: "mcontrol.energySavingEC")
+        if performanceMode == .energySaving { performPowerChange(.energySaving) }
+    }
+    func restorePower() { performPowerChange(nil) }
+    private func performPowerChange(_ mode: PerformanceMode?, automatic: Bool = false, savedEco: Bool? = nil) {
+        guard !performanceBusy, !ControlAppDelegate.terminating, let expected = powerControlState,
+              mode == nil ? canRestorePower : powerControlAvailable else { return }
+        startupPowerAttempted = true
+        if mode == .extreme && !BatteryStatus.readSystem().externalPower {
+            performanceStatus = "极致档仅支持接通电源时使用"
+            return
+        }
         performanceBusy = true
-        performanceStatus = "正在切换 EC 性能档…"
-        let profile = mode == .quiet ? 0 : mode == .balanced ? 1 : 2
+        ControlAppDelegate.powerChangeInProgress = true
+        performanceStatus = "正在切换并校验功耗与 EC 状态…"
+        let preset = mode?.cpuPreset
+        let eco = mode == .energySaving && (savedEco ?? ecoPreference)
         Task { @MainActor [weak self] in
             guard let self else { return }
-            defer { self.performanceBusy = false }
+            defer {
+                self.performanceBusy = false
+                ControlAppDelegate.powerChangeInProgress = false
+            }
             do {
-                let receipt = try await Task.detached { try PerformanceAdministrator.apply(profile, expected: expected) }.value
-                self.performanceBytes = receipt
+                let receipt = try await Task.detached {
+                    try PerformanceAdministrator.apply(
+                        preset, eco: eco, expected: expected, allowRegistration: !automatic)
+                }.value
+                self.powerControlState = receipt
                 self.performanceMode = mode
-                OSDManager.shared.show(icon: "bolt.fill", text: mode.title)
-                self.performanceStatus = "\(mode.title) · EC D2/D4 读回通过；风扇手动曲线已退出"
+                SavedPowerSelection.saveVerified(
+                    preset.map { SavedPowerSelection(preset: $0, eco: eco) }, to: .standard)
+                if automatic {
+                    self.ecoPreference = savedEco ?? self.ecoPreference
+                    UserDefaults.standard.set(self.ecoPreference, forKey: "mcontrol.energySavingEC")
+                } else {
+                    OSDManager.shared.show(icon: mode?.symbol ?? "arrow.uturn.backward",
+                                           text: mode?.title ?? "已恢复原始设置")
+                }
+                self.performanceStatus = self.describePower(receipt)
                 self.successfulSettingsApplyCount += 1
                 self.readFan()
             } catch {
-                self.performanceBytes = nil
+                self.powerControlState = nil
                 self.performanceMode = nil
                 self.performanceStatus = error.localizedDescription
             }
@@ -468,28 +585,44 @@ final class MSIControlModel: ObservableObject {
         }
     }
     func readPerformance() {
-        guard !performanceBusy else { return }
+        powerServiceReady = PerformanceAdministrator.serviceEnabled
+        if powerServiceReady { powerAuthorizationError = nil }
+        guard !performanceBusy, !ControlAppDelegate.terminating else { return }
         performanceBusy = true
         Task { @MainActor [weak self] in
             guard let self else { return }
-            defer { self.performanceBusy = false }
+            defer {
+                self.performanceBusy = false
+                self.restoreStartupPowerIfReady()
+            }
             do {
-                let bytes = try await Task.detached { try PerformanceAdministrator.read() }.value
-                self.performanceBytes = bytes
-                switch bytes {
-                case (0xC1, 0x1D): self.performanceMode = .quiet
-                case (0xC1, 0x0D): self.performanceMode = .balanced
-                case (0xC4, 0x0D): self.performanceMode = .performance
-                default: self.performanceMode = nil
-                }
-                self.performanceStatus = self.performanceMode.map { "\($0.title) · EC 当前档位" }
-                    ?? String(format: "未识别性能档 D2=%02X D4=%02X，禁止猜测", bytes.0, bytes.1)
+                let status = try await Task.detached { try PerformanceAdministrator.read() }.value
+                self.powerControlState = status
+                self.performanceMode = status.preset.map { PerformanceMode.allCases[$0.rawValue] }
+                self.performanceStatus = self.describePower(status)
             } catch {
                 self.performanceMode = nil
-                self.performanceBytes = nil
+                self.powerControlState = nil
                 self.performanceStatus = error.localizedDescription
             }
         }
+    }
+    private func restoreStartupPowerIfReady() {
+        guard !startupPowerAttempted, !ControlAppDelegate.terminating,
+              let saved = SavedPowerSelection.load(from: .standard),
+              let preset = saved.preset, powerControlAvailable,
+              PerformanceAdministrator.serviceEnabled else { return }
+        performPowerChange(PerformanceMode.allCases[preset.rawValue], automatic: true, savedEco: saved.eco)
+    }
+    private func describePower(_ status: CPUPowerControlStatus) -> String {
+        if status.conflict { return "检测到外部策略修改，已停止控制；原值恢复未确认" }
+        guard status.available else { return "当前 CPU、EC 或功耗锁定状态不支持安全写入" }
+        if status.preset == .energySaving && status.shift == 0xC2 {
+            return "EC 原生节能 · 可能关闭键盘背光；软件功耗限制已退出"
+        }
+        let values = status.currentWatts
+        let prefix = status.preset == nil ? "原始设置" : "功耗读回"
+        return String(format: "%@ · PL1 %.0f W / PL2 %.0f W", prefix, values.0, values.1)
     }
     func installDriver() { installMessage = OpenCoreDriverInstaller.install(); showingInstallResult = true; monitor.refresh() }
 }
@@ -548,9 +681,15 @@ final class SystemMonitor: ObservableObject {
     @Published private(set) var sensors = SensorSnapshot.pending
     private let sensorSampler = SensorSampler()
     private var sensorTask: Task<Void, Never>?
+    private var frequencyTask: Task<Void, Never>?
     private var dashboardVisible = false
     private var hasSensorSample = false
     @Published private(set) var coreFrequency = SensorReading.pending
+    @Published private(set) var coreFrequencies: [CoreFrequency] = []
+    @Published private(set) var coreFrequencyRows: [CoreFrequencyRow] = []
+    @Published private(set) var coreDetailsIssue: String?
+    private var frequencySamples = CoreFrequencySamples()
+    private var frequencyReadIssue: String?
     var displayedFrequency: SensorReading {
         return coreFrequency
     }
@@ -573,9 +712,33 @@ final class SystemMonitor: ObservableObject {
                 self?.refresh()
             }
         }
+        frequencyTask = Task.detached(priority: .utility) { [weak self] in
+            let cpuCount = ProcessInfo.processInfo.processorCount
+            while !Task.isCancelled {
+                let counters: [CoreCounter]
+                let issue: String?
+                do {
+                    let bridge = try ECBridgeConnection()
+                    counters = bridge.counterCacheVersion == 1
+                        ? try bridge.cachedCoreCounters(logicalCPUCount: cpuCount)
+                        : try bridge.coreCounters()
+                    issue = bridge.counterCacheVersion == 1
+                        ? nil : "全核采样需要 MSIECBridge 0.4.9，请更新硬盘 EFI 并重启"
+                } catch {
+                    counters = []
+                    issue = String(describing: error)
+                }
+                guard !Task.isCancelled else { return }
+                await self?.recordFrequency(counters, issue: issue, at: ProcessInfo.processInfo.systemUptime)
+                do { try await Task.sleep(for: .milliseconds(250)) }
+                catch { return }
+            }
+        }
     }
-    deinit { refreshTask?.cancel(); sensorTask?.cancel() }
+    deinit { refreshTask?.cancel(); sensorTask?.cancel(); frequencyTask?.cancel() }
     func refresh() {
+        frequencySamples.expire(at: ProcessInfo.processInfo.systemUptime)
+        publishFrequency()
         if sensorTask == nil {
             sensorTask = Task { [weak self, sensorSampler] in
                 let snapshot = await sensorSampler.sample()
@@ -592,20 +755,11 @@ final class SystemMonitor: ObservableObject {
                         return (missing, missing)
                     }
                 }.value
-                let frequency = await Task.detached(priority: .utility) {
-                    do {
-                        let value = try ECBridgeConnection().currentCoreFrequencyGHz()
-                        return SensorReading(value: value, source: "MSR 0x198 · sampled core · 100 MHz BCLK", issue: nil)
-                    } catch {
-                        return SensorReading(value: nil, source: nil, issue: String(describing: error))
-                    }
-                }.value
                 guard !Task.isCancelled else { return }
                 self?.sensors = SensorSnapshot(
                     timestamp: snapshot.timestamp, temperature: snapshot.temperature,
                     frequency: snapshot.frequency, fan: fans.0, fan2: fans.1, power: snapshot.power
                 )
-                self?.coreFrequency = frequency
                 self?.gpuStatus = gpu
                 self?.hasSensorSample = true
                 self?.sensorTask = nil
@@ -625,6 +779,28 @@ final class SystemMonitor: ObservableObject {
         diskInfo = Self.readDiskInfo()
         diskAvailableBytes = diskInfo?.availableBytes
         systemUptime = ProcessInfo.processInfo.systemUptime
+    }
+
+    private func recordFrequency(_ counters: [CoreCounter], issue: String?, at timestamp: TimeInterval) {
+        frequencyReadIssue = issue
+        frequencySamples.update(counters, at: timestamp)
+    }
+
+    private func publishFrequency() {
+        coreFrequencies = frequencySamples.frequencies
+        coreFrequencyRows = frequencySamples.rows(logicalCPUCount: logicalCPUs)
+        coreDetailsIssue = frequencyReadIssue ?? (frequencySamples.hasLogicalCPUIdentity
+            ? nil : "等待后台逐核采样")
+        let aggregate = frequencySamples.aggregateGHz
+        let issue = coreFrequencies.isEmpty
+            ? (frequencyReadIssue ?? "等待同一核心的有效区间采样")
+            : (aggregate == nil ? "有效采样核心均处于空闲，暂无运行频率" : nil)
+        let observed = coreFrequencyRows.filter { $0.frequency != nil }.count
+        let coverage = frequencySamples.hasLogicalCPUIdentity
+            ? "\(observed)/\(logicalCPUs) 个逻辑核心有效"
+            : "\(coreFrequencies.count) 个核心有效，未提供逻辑编号"
+        coreFrequency = SensorReading(value: aggregate,
+            source: "APERF/MPERF · 活动加权 CPU 速度 · \(coverage) · 约每秒更新", issue: issue)
     }
 
     private static func readUsedMemory() -> UInt64 {
@@ -664,20 +840,18 @@ final class SystemMonitor: ObservableObject {
     }
 
     private static func readOpenCoreVersion() -> String? {
-        let entry = IORegistryEntryFromPath(kIOMainPortDefault, "IODeviceTree:/options")
-        guard entry != IO_OBJECT_NULL else { return nil }
-        defer { IOObjectRelease(entry) }
-        var raw: Unmanaged<CFMutableDictionary>?
-        guard IORegistryEntryCreateCFProperties(entry, &raw, kCFAllocatorDefault, 0) == KERN_SUCCESS,
-              let properties = raw?.takeRetainedValue() as? [String: Any] else { return nil }
-        for (key, value) in properties where key.lowercased() == "opencore-version" ||
-            key.lowercased() == "4d1fda02-38c7-4a6a-9cc6-4bcca8b30102:opencore-version" {
-            let text: String?
-            if let data = value as? Data { text = String(data: data, encoding: .utf8) }
-            else { text = value as? String }
-            if let version = text?.trimmingCharacters(in: .controlCharacters.union(.whitespacesAndNewlines)),
-               !version.isEmpty, version.count <= 80 {
-                return version
+        for path in ["IODeviceTree:/options", "IODeviceTree:/efi", "IODeviceTree:/efi/platform", "IODeviceTree:/chosen"] {
+            let entry = IORegistryEntryFromPath(kIOMainPortDefault, path)
+            guard entry != IO_OBJECT_NULL else { continue }
+            defer { IOObjectRelease(entry) }
+            for key in ["opencore-version", "4D1FDA02-38C7-4A6A-9CC6-4BCCA8B30102:opencore-version",
+                        "4d1fda02-38c7-4a6a-9cc6-4bcca8b30102:opencore-version"] {
+                guard let value = IORegistryEntryCreateCFProperty(entry, key as CFString, kCFAllocatorDefault, 0)?.takeRetainedValue() else { continue }
+                let text = (value as? Data).flatMap { String(data: $0, encoding: .utf8) } ?? value as? String
+                if let version = text?.trimmingCharacters(in: .controlCharacters.union(.whitespacesAndNewlines)),
+                   !version.isEmpty, version.count <= 80 {
+                    return version
+                }
             }
         }
         return nil
@@ -760,13 +934,15 @@ final class SystemMonitor: ObservableObject {
         guard IORegistryEntryCreateCFProperties(service, &rawProperties, kCFAllocatorDefault, 0) == KERN_SUCCESS, let properties = rawProperties?.takeRetainedValue() as? [String: Any] else { ecStatus = "驱动已加载，属性读取失败"; ecIdentity = "—"; return }
         ecControlAvailable = ((properties["MSIECAPI"] as? NSNumber)?.intValue ?? 0) >= 3
         let profile = properties["MSIECProfile"] as? String ?? "unknown"
+        let api = (properties["MSIECAPI"] as? NSNumber)?.intValue ?? 0
+        let version = properties["MSIECDriverVersion"] as? String
+        let bridgeDescription = version.flatMap { $0.isEmpty ? nil : "MSIECBridge \($0)" } ?? "MSIECBridge · API \(api)"
         if profile == "not-probed" {
-            let api = (properties["MSIECAPI"] as? NSNumber)?.intValue ?? 0
-            ecStatus = api == 2 || api == 3 ? "EC 读写驱动已加载" : "被动诊断版已加载"
-            ecIdentity = api == 2 || api == 3 ? "按需读取 · 前往风扇/电池设置" : "启动时未访问 EC"
+            ecStatus = ECChargePolicy.supportsAPI(api) ? bridgeDescription : "EC 驱动 API \(api) 不兼容"
+            ecIdentity = (try? ECBridgeConnection().firmware()) ?? "EC 固件读取失败"
             return
         }
-        let identity = properties["MSIECIdentityA0"] as? Data ?? Data(); let printable = identity.prefix { $0 >= 0x20 && $0 <= 0x7E }; ecIdentity = String(bytes: printable, encoding: .ascii).flatMap { $0.isEmpty ? nil : $0 } ?? "未识别"; ecStatus = profile
+        let identity = properties["MSIECIdentityA0"] as? Data ?? Data(); let printable = identity.prefix { $0 >= 0x20 && $0 <= 0x7E }; ecIdentity = String(bytes: printable, encoding: .ascii).flatMap { $0.isEmpty ? nil : $0 } ?? "未识别"; ecStatus = bridgeDescription
     }
     private static func sysctlInt(_ name: String) -> Int? { var value: Int32 = 0; var size = MemoryLayout<Int32>.size; guard sysctlbyname(name, &value, &size, nil, 0) == 0 else { return nil }; return Int(value) }
     private static func value(named name: String, in text: String) -> Int? { let escaped = NSRegularExpression.escapedPattern(for: name); guard let regex = try? NSRegularExpression(pattern: "\\b\(escaped)\\s*=\\s*(\\d+)"), let match = regex.firstMatch(in: text, range: NSRange(text.startIndex..., in: text)), let range = Range(match.range(at: 1), in: text) else { return nil }; return Int(text[range]) }
@@ -799,28 +975,33 @@ struct RootView: View {
         } detail: {
             ContentView(model: model)
                 .safeAreaInset(edge: .top, spacing: 0) {
-                    if model.section == .dashboard && (!hotkeys.inputAllowed || !hotkeys.bluetoothAllowed) {
+                    if model.section == .dashboard && (!hotkeys.inputAllowed || !hotkeys.bluetoothAllowed || !model.powerServiceReady) {
                         VStack(alignment: .leading, spacing: 8) {
-                            Label(t("shortcutPermissions"), systemImage: "exclamationmark.triangle")
+                            Label(t("controlPermissions"), systemImage: "exclamationmark.triangle")
                                 .font(.headline)
-                            Text(t("shortcutPermissionContext"))
-                                .font(.caption).foregroundStyle(.secondary)
-                            HStack {
-                                Image(nsImage: NSWorkspace.shared.icon(forFile: Bundle.main.bundlePath))
-                                    .resizable()
-                                    .frame(width: 40, height: 40)
-                                    .onDrag {
-                                        NSItemProvider(object: Bundle.main.bundleURL as NSURL)
-                                    }
-                                    .help(t(hotkeys.inputAllowed ? "dragAppForBluetooth" : "dragAppForInputMonitoring"))
-                                    .accessibilityLabel(t(hotkeys.inputAllowed ? "dragAppForBluetooth" : "dragAppForInputMonitoring"))
-                                Text(t(hotkeys.inputAllowed ? "dragAppForBluetooth" : "dragAppForInputMonitoring"))
+                            if !hotkeys.inputAllowed || !hotkeys.bluetoothAllowed {
+                                Text(t("shortcutPermissionContext"))
                                     .font(.caption).foregroundStyle(.secondary)
-                                if !hotkeys.inputAllowed {
-                                    Button(t("enableInputMonitoring")) { hotkeys.requestPermission() }
+                            }
+                            if !model.powerServiceReady {
+                                Text(model.powerAuthorizationError ?? t("powerAuthorizationContext"))
+                                    .font(.caption).foregroundStyle(.secondary)
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
+                            HStack(spacing: 12) {
+                                if !hotkeys.inputAllowed || !hotkeys.bluetoothAllowed {
+                                    Image(nsImage: NSWorkspace.shared.icon(forFile: Bundle.main.bundlePath))
+                                        .resizable()
+                                        .frame(width: 40, height: 40)
+                                        .onDrag {
+                                            NSItemProvider(object: Bundle.main.bundleURL as NSURL)
+                                        }
+                                        .help(t(hotkeys.inputAllowed ? "dragAppForBluetooth" : "dragAppForInputMonitoring"))
+                                        .accessibilityLabel(t(hotkeys.inputAllowed ? "dragAppForBluetooth" : "dragAppForInputMonitoring"))
                                 }
-                                if !hotkeys.bluetoothAllowed {
-                                    Button(t("enableBluetoothPermission")) { hotkeys.requestBluetoothPermission() }
+                                ViewThatFits(in: .horizontal) {
+                                    HStack(spacing: 8) { permissionButtons }
+                                    VStack(alignment: .leading, spacing: 8) { permissionButtons }
                                 }
                             }
                             Divider()
@@ -882,6 +1063,30 @@ struct RootView: View {
             Button(t("not_now"), role: .cancel) {}
         } message: {
             Text(t("fan_control_and_charge_limits_require_a_compatible_ec_driver_check_har"))
+        }
+    }
+
+    @ViewBuilder
+    private var permissionButtons: some View {
+        if !hotkeys.inputAllowed {
+            Button(t("enableInputMonitoring")) { hotkeys.requestPermission() }
+        }
+        if !hotkeys.bluetoothAllowed {
+            Button(t("enableBluetoothPermission")) { hotkeys.requestBluetoothPermission() }
+        }
+        if !model.powerServiceReady {
+            Button(action: model.authorizePowerService) {
+                HStack(spacing: 6) {
+                    Image(nsImage: NSWorkspace.shared.icon(forFile: Bundle.main.bundlePath))
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                        .onDrag {
+                            NSItemProvider(object: Bundle.main.bundleURL as NSURL)
+                        }
+                    Text(t("authorizePowerControl"))
+                }
+            }
+            .disabled(model.powerAuthorizationBusy)
         }
     }
 }

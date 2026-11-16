@@ -327,7 +327,7 @@
 	<key>fanCurve</key>
 	<string>双风扇曲线</string>
 	<key>fanModeHint</key>
-	<string>自动模式不允许调整；切换手动并应用后可编辑六点曲线，写入需要管理员授权</string>
+	<string>自动模式不允许调整；切换手动并应用后可编辑六点曲线。首次批准后台助手后，应用曲线无需重复输入密码。</string>
 	<key>fanNodes</key>
 	<string>风扇节点</string>
 	<key>fanPreviewOnly</key>
@@ -731,5 +731,8 @@
     <key>osdUnconfirmed</key><string>状态未确认</string>
     <key>osdOn</key><string>已开启</string>
     <key>osdOff</key><string>已关闭</string>
+    <key>controlPermissions</key><string>控制权限未完成</string>
+    <key>authorizePowerControl</key><string>授权硬件控制</string>
+    <key>powerAuthorizationContext</key><string>请首次批准 MSI Control 后台助手。之后性能档位、风扇控制和 EFI 挂载无需重复输入密码。</string>
 </dict>
 </plist>

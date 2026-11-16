@@ -1,5 +1,40 @@
 # MSIECBridge 0.2.1
 
+## CPU details roster (0.4.8 / API 15 / protocol 4)
+
+Protocol 4 retains the 96-byte inline response and uses header word 3 for
+`cpu_number() + 1`, obtained under the same short local lock as the counters.
+The x86_64 kernel export belongs to `com.apple.kpi.unsupported`; this dependency
+is explicit. No cross-core rendezvous, CPU targeting or counter writes are added.
+The application lists all OS logical processor numbers inside CPU details,
+retains observed APIC/type identity and shows waiting states for unobserved or
+expired frequencies. Scheduler coverage of every processor is not guaranteed.
+Protocols 2/3 still support aggregate readings but have no OS processor identity
+and are never guessed into the numbered details rows.
+
+## Frequency compatibility candidate (0.4.7 / API 15 / protocol 3)
+
+Frequency reads now detect Intel family 6 hardware capabilities rather than
+requiring Raptor Lake model IDs. APERF/MPERF support and a reliable base clock
+remain mandatory. Non-hybrid CPUs are reported as ordinary cores (type 0);
+hybrid CPUs retain CPUID P/E identification.
+
+Protocol 3 retains the 96-byte inline response. Its `tsc` field contains OS
+monotonic nanoseconds and `tscHz` is 1 GHz, so interval timing does not require
+CPUID leaf 0x15. Base frequency uses leaf 0x16 when available. For mainstream
+Sandy Bridge, Ivy Bridge, Haswell, Broadwell, Skylake, Kaby/Coffee Lake,
+Comet Lake, Ice Lake, Tiger Lake and Rocket Lake client model IDs listed in
+`IntelFrequency.hpp`, a missing base clock can fall back to a guarded read of
+MSR_PLATFORM_INFO's non-turbo ratio with a 100 MHz reference. Other models
+without a CPUID base clock are rejected; Atom, HEDT/Xeon and first-generation
+Core are not covered by that fallback.
+
+This is local-only sampling, not a complete all-core scan. There are no
+cross-CPU calls, calibration waits, or sampling MSR writes. CPU power-control
+support is unchanged. Older-hardware compatibility is not physically verified.
+The updated application accepts protocols 2 and 3; older applications that
+only accept protocol 2 require an app update before using this candidate.
+
 Intel macOS 14+ experimental IOKit Kext, API version 1. Attaches as a client of AppleACPIEC using a separate IOMatchCategory. It publishes readiness at startup without evaluating ACPI methods or reading/writing EC. No polling timer, direct port I/O, startup probe, automatic writes, or persistent helper.
 
 The service obtains AppleACPIEC's IOACPIPlatformDevice provider and uses the system EmbeddedController address-space API for 8-bit operations. Target compatibility is unverified: successful compilation does not establish that this address-space path works on the intended firmware.

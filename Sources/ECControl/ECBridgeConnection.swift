@@ -3,9 +3,11 @@ import IOKit
 
 // Connections are short-lived; callers serialize individual hardware operations.
 public final class ECBridgeConnection {
-    private var connection: io_connect_t = 0
+    var connection: io_connect_t = 0
     private let driverVersion: String
     public let apiVersion: Int
+    let counterProtocolVersion: Int
+    public let counterCacheVersion: Int
 
     public init() throws {
         guard let matching = IOServiceMatching("MSIEmbeddedControllerBridge") else {
@@ -24,16 +26,44 @@ public final class ECBridgeConnection {
             throw ECError.unavailable("发现多个 EC 桥接服务，未执行读写")
         }
         let version = IORegistryEntryCreateCFProperty(service, "MSIECAPI" as CFString, kCFAllocatorDefault, 0)?.takeRetainedValue() as? NSNumber
-        guard let api = version?.intValue, (2...9).contains(api) else {
+        guard let api = version?.intValue, ECChargePolicy.supportsAPI(api) else {
             throw ECError.unavailable("当前 EC 驱动 API 不兼容，请配置随应用附带的新版驱动并重启。")
         }
         apiVersion = api
-        driverVersion = api == 9 ? "0.3.6" : api == 8 ? "0.3.5" : api == 7 ? "0.3.4" : api == 6 ? "0.3.3" : api == 5 ? "0.3.2" : api == 4 ? "0.3.1" : api == 3 ? "0.3.0" : "0.2.1"
+        counterProtocolVersion = (IORegistryEntryCreateCFProperty(service, "MSIECCounterProtocol" as CFString, kCFAllocatorDefault, 0)?.takeRetainedValue() as? NSNumber)?.intValue ?? 0
+        counterCacheVersion = (IORegistryEntryCreateCFProperty(service, "MSIECCounterCache" as CFString, kCFAllocatorDefault, 0)?.takeRetainedValue() as? NSNumber)?.intValue ?? 0
+        driverVersion = (IORegistryEntryCreateCFProperty(service, "MSIECDriverVersion" as CFString, kCFAllocatorDefault, 0)?.takeRetainedValue() as? String) ?? "API \(api)"
         let code = IOServiceOpen(service, mach_task_self_, 0, &connection)
         guard code == KERN_SUCCESS else { throw ECError.system(operation: "打开 EC 驱动", code: code) }
     }
 
     deinit { if connection != 0 { IOServiceClose(connection) } }
+
+    public func cpuPowerSnapshot() throws -> CPUPowerSnapshot {
+        guard apiVersion >= 12 else { throw ECError.unavailable("CPU discovery requires MSIECBridge 0.3.9 / API 12; no driver was installed.") }
+        var output = [UInt64](repeating: 0, count: 16)
+        var count: UInt32 = 16
+        let code = output.withUnsafeMutableBufferPointer {
+            IOConnectCallScalarMethod(connection, 12, nil, 0, $0.baseAddress, &count)
+        }
+        guard code == KERN_SUCCESS else { throw ECError.system(operation: "Read CPU capabilities", code: code) }
+        guard count == 16 else { throw ECError.invalid("Invalid CPU snapshot length") }
+        return try CPUPowerSnapshot(words: output)
+    }
+
+    func callCommonFeature(feature: UInt64, desired: UInt64, expected: UInt64) throws -> [UInt64] {
+        let input = [feature, desired, expected]
+        var output: [UInt64] = [0, 0]
+        var count: UInt32 = 2
+        let code = input.withUnsafeBufferPointer { values in
+            output.withUnsafeMutableBufferPointer {
+                IOConnectCallScalarMethod(connection, 11, values.baseAddress, 3, $0.baseAddress, &count)
+            }
+        }
+        guard code == KERN_SUCCESS else { throw ECError.system(operation: "EC control; refresh state before retrying", code: code) }
+        guard count == 2 else { throw ECError.invalid("Invalid EC control response") }
+        return output
+    }
 
     public func touchpadEnabled(_ desired: Bool? = nil) throws -> Bool {
         guard apiVersion >= 9 else {
@@ -163,8 +193,8 @@ public final class ECBridgeConnection {
     public func snapshot() throws -> ECBridgeSnapshot {
         let version = try firmware()
         // Unknown firmware can be diagnosed without reading a guessed charge register.
-        let charge = ECChargePolicy.supports(version) && (version != "15P2EMS1.110" || apiVersion >= 4)
-            ? try readByte(at: UInt8(ECChargePolicy.address)) : nil
+        let address = ECFeatureProfile.match(version)?.chargeAddress
+        let charge = address.flatMap { try? readByte(at: $0) }
         return ECBridgeSnapshot(apiVersion: apiVersion, driverVersion: driverVersion, firmware: version, chargeByte: charge)
     }
 
@@ -173,8 +203,9 @@ public final class ECBridgeConnection {
             throw ECError.invalid("充电上限或预期 EC 值无效")
         }
         let firmware = try firmware()
-        guard ECChargePolicy.supports(firmware) else { throw ECError.unavailable("当前固件 \(firmware) 尚未适配充电写入") }
-        guard firmware != "15P2EMS1.110" || apiVersion >= 4 else { throw ECError.unavailable("本机充电控制需要 MSIECBridge 0.3.1") }
+        guard ECChargePolicy.supports(firmware, api: apiVersion) else {
+            throw ECError.unavailable("当前固件或驱动不支持充电写入；通用系列需要 API 10 驱动")
+        }
         let input: [UInt64] = [UInt64(percent), UInt64(expected)]
         var output: [UInt64] = [0, 0]
         var count: UInt32 = 2
@@ -193,6 +224,14 @@ public final class ECBridgeConnection {
     }
 
     public func setFanMode(_ mode: ECFanMode, expected: UInt8) throws -> ECFanModeReceipt {
+        let identity = try firmware()
+        guard let profile = ECFeatureProfile.match(identity),
+              profile.fanModes.contains(mode.rawValueByte), profile.fanModes.contains(expected),
+              apiVersion >= 10 ||
+                (identity == "15P2EMS1.110" && apiVersion >= 3) ||
+                (ECChargePolicy.supportedFirmware.contains(identity) && identity != "15P2EMS1.110") else {
+            throw ECError.unavailable("当前风扇模式需要匹配的固件配置及 API 10 驱动")
+        }
         guard ECFanMode(rawValueByte: expected) != nil else { throw ECError.invalid("当前 D4 风扇模式无法确认") }
         let input: [UInt64] = [UInt64(mode.rawValueByte), UInt64(expected)]
         var output: [UInt64] = [0, 0]
@@ -246,6 +285,11 @@ public final class ECBridgeConnection {
 
     public func setCoolerBoost(_ enabled: Bool, expected: UInt8) throws -> ECCoolerBoostReceipt {
         guard apiVersion >= 3 else { throw ECError.unavailable("强冷需要 MSIECBridge 0.3.0，配置驱动并重启后再试") }
+        let identity = try firmware()
+        guard ECFeatureProfile.match(identity) != nil,
+              apiVersion >= 10 || identity == "15P2EMS1.110" else {
+            throw ECError.unavailable("当前固件的强冷控制需要 API 10 驱动")
+        }
         let input: [UInt64] = [enabled ? 1 : 0, UInt64(expected)]
         var output: [UInt64] = [0, 0]
         var count: UInt32 = 2

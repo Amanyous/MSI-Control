@@ -23,9 +23,10 @@ plist = {
     "CFBundleDevelopmentRegion": "English", "CFBundleExecutable": "MSIECBridge",
     "CFBundleIdentifier": "org.shenying.msiecbridge", "CFBundleInfoDictionaryVersion": "6.0",
     "CFBundleName": "MSIECBridge", "CFBundlePackageType": "KEXT",
-    "CFBundleShortVersionString": "0.3.6", "CFBundleVersion": "11", "OSBundleRequired": "Root",
+    "CFBundleShortVersionString": "0.4.9", "CFBundleVersion": "24", "OSBundleRequired": "Root",
     "OSBundleLibraries": {"com.apple.kpi.iokit": "12.0.0", "com.apple.kpi.libkern": "12.0.0",
-                          "com.apple.kpi.mach": "12.0.0", "com.apple.iokit.IOACPIFamily": "1.0.0"},
+                          "com.apple.kpi.mach": "12.0.0", "com.apple.kpi.unsupported": "12.0.0",
+                          "com.apple.iokit.IOACPIFamily": "1.0.0"},
     "IOKitPersonalities": {"MSIEmbeddedControllerBridge": {
         "CFBundleIdentifier": "org.shenying.msiecbridge", "IOClass": "MSIEmbeddedControllerBridge",
         "IOProviderClass": "AppleACPIEC", "IOProbeScore": 100,
@@ -37,4 +38,4 @@ destination = root / "Sources/ShenyingControl/Resources/MSIECBridge.kext"
 if destination.exists(): shutil.rmtree(destination)
 shutil.copytree(kext, destination, copy_function=shutil.copyfile)
 (destination / "Contents/MacOS/MSIECBridge").chmod(0o755)
-print("Built MSIECBridge 0.3.6 (x86_64). Not loaded or installed.")
+print("Built MSIECBridge 0.4.9 / API 15 (protocol 4, indexed background cache). Not loaded or installed.")

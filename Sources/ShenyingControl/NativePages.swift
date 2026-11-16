@@ -32,7 +32,7 @@ struct ContentView: View {
             case .lighting: LightingPage(lighting: model.lighting)
             case .battery: BatteryPage(battery: model.battery)
             case .drivers: DriverConfigurationPage(model: model, monitor: model.monitor)
-            case .settings: ApplicationSettingsPage()
+            case .settings: ApplicationSettingsPage(model: model)
             case .about: ApplicationAboutPage()
             }
         }
@@ -58,6 +58,7 @@ struct DashboardPage: View {
     @State private var displayDiskFraction = 0.0
     @State private var showCopyToast = false
     @State private var copyFeedback = false
+    @State private var showingCPUDetails = false
     private enum BootPhase {
         case waiting, sweeping, holding, returning, live
     }
@@ -109,7 +110,11 @@ struct DashboardPage: View {
                     spacing: 20
                 ) {
                 SensorMetric(title: t("cpuTemperature"), reading: monitor.sensors.temperature, displayValue: displayValues[0], isBootSweeping: isBootSweeping, unit: "°C", maximum: maxima[0], temperatureWarning: true)
-                SensorMetric(title: t("cpuFrequency"), reading: monitor.displayedFrequency, displayValue: displayValues[1], isBootSweeping: isBootSweeping, unit: "GHz", maximum: maxima[1])
+                Button { showingCPUDetails = true } label: {
+                    SensorMetric(title: t("cpuFrequency"), reading: monitor.displayedFrequency, displayValue: displayValues[1], isBootSweeping: isBootSweeping, unit: "GHz", maximum: maxima[1])
+                }
+                .buttonStyle(.plain)
+                .help("CPU 频率详情")
                 SensorMetric(title: t("cpuPower"), reading: monitor.sensors.power, displayValue: displayValues[4], isBootSweeping: isBootSweeping, unit: "W", maximum: maxima[4])
                 SensorMetric(
                     title: t("cpuUsage"),
@@ -157,15 +162,21 @@ struct DashboardPage: View {
                     if model.performanceMode == nil {
                         Text(t("unrecognized")).tag(nil as PerformanceMode?)
                     }
-                    ForEach([PerformanceMode.quiet, .balanced, .performance], id: \.self) { mode in
+                    ForEach(PerformanceMode.allCases) { mode in
                         Text(mode.title).tag(Optional(mode))
                     }
                 }
                 .pickerStyle(.segmented)
                 .labelsHidden()
-                .frame(width: 290)
-                .disabled(model.performanceBusy || model.performanceMode == nil)
+                .frame(width: 380)
+                .disabled(model.performanceBusy || !model.powerControlAvailable)
                 }
+                Button {
+                    model.restorePower()
+                } label: {
+                    Label("恢复原始设置", systemImage: "arrow.uturn.backward")
+                }
+                .disabled(model.performanceBusy || !model.canRestorePower)
             }
             Divider()
             VStack(alignment: .leading, spacing: 12) {
@@ -276,6 +287,12 @@ struct DashboardPage: View {
                 ToastView(message: "采样命令已复制")
                     .padding(.top, 12)
                     .transition(.move(edge: .top).combined(with: .opacity))
+            }
+        }
+        .overlay {
+            if showingCPUDetails {
+                CPUFrequencyDetails(monitor: monitor) { showingCPUDetails = false }
+                    .background(.background)
             }
         }
         .onAppear { monitor.dashboardDidAppear(); model.readPerformance() }
@@ -535,7 +552,9 @@ struct FanPage: View {
             VStack(alignment: .leading, spacing: 12) {
                 VStack(alignment: .leading, spacing: 8) {
                     Text(t("mode")).font(.headline).padding(.bottom, 8)
-                Picker("", selection: Binding(get: { model.selectedFanMode }, set: { mode in
+                Picker("", selection: Binding(get: {
+                    model.selectedFanMode == .silent ? ECFanMode.automatic : model.selectedFanMode
+                }, set: { mode in
                     if reduceMotion {
                         model.applyFanMode(mode)
                     } else {
@@ -545,17 +564,19 @@ struct FanPage: View {
                     Text(t("automatic")).tag(ECFanMode.automatic)
                     Text(t("manual")).tag(ECFanMode.advanced)
                 }.pickerStyle(.segmented).disabled(model.fanModeBusy || model.loadedFanMode == nil)
-                HStack(spacing: 8) {
+                if !isAutoMode {
+                  HStack(spacing: 8) {
                     ForEach(FanPreset.allCases, id: \.self) { preset in
                         Button(preset.title) {
                             model.setFanPreset(preset)
                             NSHapticFeedbackManager.defaultPerformer.perform(.alignment, performanceTime: .now)
                         }
-                            .buttonStyle(FanPresetButtonStyle(selected: !isAutoMode && model.currentPreset == preset))
-                            .accessibilityAddTraits(!isAutoMode && model.currentPreset == preset ? .isSelected : [])
+                            .buttonStyle(FanPresetButtonStyle(selected: model.currentPreset == preset))
+                            .accessibilityAddTraits(model.currentPreset == preset ? .isSelected : [])
                     }
                 }
                 .disabled(!canEdit)
+                }
                 LabeledContent(t("fan_1")) {
                     Text("\(model.monitor.sensors.fan.formatted(decimals: 0)) RPM")
                         .contentTransition(.numericText())

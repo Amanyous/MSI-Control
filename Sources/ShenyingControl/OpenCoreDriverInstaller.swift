@@ -3,8 +3,6 @@ import Foundation
 
 @MainActor
 enum OpenCoreDriverInstaller {
-    static let requiredDriverVersion = "0.3.6"
-
     static func install() -> String {
         let panel = NSOpenPanel()
         panel.title = t("choose_opencore_config_plist_or_efi_folder")
@@ -30,14 +28,17 @@ enum OpenCoreDriverInstaller {
         guard let data = try? Data(contentsOf: bundledKext.appendingPathComponent("Contents/Info.plist")),
               let info = try? PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any],
               info["CFBundleIdentifier"] as? String == "org.shenying.msiecbridge",
-              info["CFBundleShortVersionString"] as? String == requiredDriverVersion else {
-            return "包内 EC 驱动版本不匹配，需要 \(requiredDriverVersion)。请重新下载完整应用包，未修改 EFI。"
+              info["CFBundleExecutable"] as? String == "MSIECBridge",
+              let driverVersion = info["CFBundleShortVersionString"] as? String,
+              !driverVersion.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+              FileManager.default.isExecutableFile(atPath: bundledKext.appendingPathComponent("Contents/MacOS/MSIECBridge").path) else {
+            return "包内 EC 驱动身份、版本信息或可执行文件无效。请重新下载完整应用包，未修改 EFI。"
         }
 
         let confirm = NSAlert()
         confirm.alertStyle = .warning
         confirm.messageText = t("modify_opencore_efi")
-        confirm.informativeText = "目标：\(oc.path)\n\n将备份 config.plist 和现有 EC 驱动，再安装 MSIECBridge \(requiredDriverVersion) 并在 Kernel → Add 中启用。CPU 频率接口只读，日常读取无需管理员授权；EC 写入仍要求管理员授权。此 Kext 尚未在目标机验证；请保留可启动的备用 EFI，若启动异常可从备份恢复。"
+        confirm.informativeText = "目标：\(oc.path)\n\n将备份 config.plist 和现有 EC 驱动，再安装 MSIECBridge \(driverVersion) 并在 Kernel → Add 中启用。CPU 频率接口只读，日常读取无需管理员授权；EC 写入仍要求管理员授权。此 Kext 尚未在目标机验证；请保留可启动的备用 EFI，若启动异常可从备份恢复。"
         confirm.addButton(withTitle: t("back_up_and_install"))
         confirm.addButton(withTitle: t("cancel"))
         guard confirm.runModal() == .alertFirstButtonReturn else { return "已取消，EFI 未修改。" }

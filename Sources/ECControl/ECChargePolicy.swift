@@ -1,13 +1,21 @@
 import Foundation
 
 public enum ECChargePolicy {
+    public static func supportsAPI(_ version: Int) -> Bool { (2...15).contains(version) }
     public static let apiVersion = 2
     public static let address = 0xD7
     public static let percentRange = 10...100
     public static let firmwareLength = 12
     public static let supportedFirmware = ["15P2EMS1.110", "15P4EMS1.105", "15P4EMS1.107"]
 
-    public static func supports(_ firmware: String) -> Bool { supportedFirmware.contains(firmware) }
+    public static func supports(_ firmware: String) -> Bool { ECFeatureProfile.match(firmware)?.chargeAddress != nil }
+    public static func supports(_ firmware: String, api: Int) -> Bool {
+        guard supportsAPI(api) else { return false }
+        if supportedFirmware.contains(firmware) {
+            return firmware != "15P2EMS1.110" || api >= 4
+        }
+        return api >= 10 && supports(firmware)
+    }
     public static func encode(_ percent: Int) -> UInt8? {
         guard percentRange.contains(percent) else { return nil }
         return UInt8(percent) | 0x80
@@ -16,7 +24,7 @@ public enum ECChargePolicy {
         let value = Int(raw & 0x7F)
         return percentRange.contains(value) ? value : nil
     }
-    public static func validCurrent(_ raw: UInt8) -> Bool { raw == 0x80 || decode(raw) != nil }
+    public static func validCurrent(_ raw: UInt8) -> Bool { raw & 0x80 != 0 && (raw == 0x80 || decode(raw) != nil) }
     public static func parseByte(_ text: String) -> UInt8? {
         var text = text.trimmingCharacters(in: .whitespacesAndNewlines)
         if text.lowercased().hasPrefix("0x") { text.removeFirst(2) }
@@ -83,8 +91,7 @@ public struct ECBridgeSnapshot: Codable, Equatable, Sendable {
     public let readAt: Date
     public var chargeLimit: Int? { chargeByte.flatMap(ECChargePolicy.decode) }
     public var canWriteChargeLimit: Bool {
-        (2...8).contains(apiVersion) && (firmware != "15P2EMS1.110" || apiVersion >= 4) &&
-        ECChargePolicy.supports(firmware) &&
+        ECChargePolicy.supports(firmware, api: apiVersion) &&
         chargeByte.map(ECChargePolicy.validCurrent) == true
     }
     public init(apiVersion: Int = ECChargePolicy.apiVersion, driverVersion: String = "0.2.1",

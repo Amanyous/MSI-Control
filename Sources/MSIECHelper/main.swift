@@ -8,7 +8,22 @@ do {
     guard args.count >= 4 else { throw ECError.invalid("EC 写入参数不足") }
     let connection = try ECBridgeConnection()
     let json: Data
-    if args.count == 4, args[1] == "set-charge-limit", let percent = Int(args[2]), ECChargePolicy.encode(percent) != nil, let expected = UInt8(args[3]), ECChargePolicy.validCurrent(expected) {
+    if args.count == 9, args[1] == "set-cpu-power", let mode = Int(args[2]),
+       (0...5).contains(mode), let eco = UInt64(args[3]), eco <= 1,
+       let generation = UInt64(args[4]), let package = UInt64(args[5]),
+       let shift = UInt64(args[6]), let fan = UInt64(args[7]), args[8] == "v1" {
+        let expected = try connection.powerControlStatus()
+        guard expected.generation == generation, expected.current == package,
+              expected.words[8] == shift, expected.words[9] == fan else {
+            throw ECError.mismatch("授权期间功耗或 EC 状态已变化，未写入")
+        }
+        json = try JSONEncoder().encode(connection.setPowerPreset(
+            CPUPowerPreset(rawValue: mode), eco: eco == 1, expected: expected))
+    } else if args.count == 6, args[1] == "set-common", let featureID = UInt64(args[2]),
+       let feature = ECCommonFeature(rawValue: featureID), let desired = UInt8(args[3]),
+       let expected = UInt8(args[4]), try connection.firmware() == args[5] {
+        json = try JSONEncoder().encode(connection.setCommonFeature(feature, desired: desired, expected: expected))
+    } else if args.count == 4, args[1] == "set-charge-limit", let percent = Int(args[2]), ECChargePolicy.encode(percent) != nil, let expected = UInt8(args[3]), ECChargePolicy.validCurrent(expected) {
         json = try JSONEncoder().encode(connection.setChargeLimit(percent, expected: expected))
     } else if args.count == 5, args[1] == "set-performance", let profile = Int(args[2]),
               let expectedShift = UInt8(args[3]), let expectedFan = UInt8(args[4]) {
@@ -17,7 +32,8 @@ do {
     } else if args.count == 4, args[1] == "set-fan-mode", let expected = UInt8(args[3]), let mode = ["auto": ECFanMode.automatic, "advanced": .advanced][args[2]] {
         json = try JSONEncoder().encode(connection.setFanMode(mode, expected: expected))
     } else if args.count == 4, args[1] == "set-cooler-boost", let expected = UInt8(args[3]), ["on", "off"].contains(args[2]) {
-        guard try connection.readByte(at: 0xD4) == ECFanMode.advanced.rawValueByte else {
+        guard let profile = ECFeatureProfile.match(try connection.firmware()),
+              try connection.readByte(at: profile.fanAddress) == ECFanMode.advanced.rawValueByte else {
             throw ECError.unavailable("请先应用手动模式")
         }
         json = try JSONEncoder().encode(connection.setCoolerBoost(args[2] == "on", expected: expected))
