@@ -8,16 +8,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Verify and expand source
+      - name: Verify and expand release source
         shell: bash
         run: |
           set -euo pipefail
-          echo "7e12d27d0f1ae4b8ec0445d9183f77b5636ba46ed96b18522194e695fc7f1638  MSI-Control-Source-v0.3.23.zip" | sha256sum -c -
-          unzip -q MSI-Control-Source-v0.3.23.zip -d "$RUNNER_TEMP/source"
-          cp -a "$RUNNER_TEMP/source/MSI-Control/." .
-          git rm MSI-Control-Source-v0.3.23.zip
+          archive="$RUNNER_TEMP/source.zip"
+          curl --fail --location --retry 3 "https://github.com/Amanyous/MSI-Control/releases/download/v0.3.49-build165/MSI-Control-Source-v0.3.49.zip" -o "$archive"
+          echo "8d0095393e49fa230f68f66b5dada77b6c81a9cc5c63a897235a76eb35c74f97  $archive" | sha256sum -c -
+          unzip -q "$archive" -d "$RUNNER_TEMP/source"
+          source="$RUNNER_TEMP/source/MSI-Control"
+          for directory in Sources Drivers Tests Tools Design; do
+            test -d "$source/$directory"
+            rsync -a --delete "$source/$directory/" "$directory/"
+          done
+          for file in Package.swift Run.command README.md .gitignore; do
+            test -f "$source/$file"
+            cp -p "$source/$file" "$file"
+          done
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add Sources Drivers Tests Tools Design Package.swift Run.command README.md .gitignore
-          git commit -m "Expand complete source tree"
-          git push
+          if ! git diff --cached --quiet; then
+            git commit -m "Release MSI Control 0.3.49 build 165"
+            git push origin HEAD:main
+          fi
+          git tag -f v0.3.49-build165
+          git push origin refs/tags/v0.3.49-build165 --force
